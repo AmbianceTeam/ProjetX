@@ -1,6 +1,56 @@
 # -*- coding: utf-8 -*-
 
 
+class Cellule:
+    
+    def __init__(self,idcell,offsize,defsize,radius,x,y,proddef,prodoff,nboff,nbdef,etat):
+        self.idcell = idcell
+        self.offsize = offsize
+        self.defsize = defsize
+        self.radius = radius
+        self.x = x
+        self.y = y
+        self.proddef = proddef
+        self.prodoff = prodoff
+        self.nboff = nboff
+        self.nbdef = nbdef
+        self.etat = etat
+    
+    def update(self,nboff,nbdef,etat):
+        self.nboff = nboff
+        self.nbdef = nbdef
+        self.etat = etat
+        
+    
+
+class Lines:
+    
+    def __init__(self,idline,idcell1,idcell2, dist, nbunit):
+        self.idline = idline
+        self.idcell1 = idcell1
+        self.idcell2 = idcell2
+        self.dist = dist
+        self.nbunit = nbunit
+        
+    def update(self,nbunit):
+        self.nbunit = nbunit
+        
+
+class Graphe:
+    
+    def __init__(self,tabcell,tablines):
+        self.tabcell = tabcell
+        self.tablines = tablines
+        
+        
+    def ajoutcell(cell):
+        self.tabcell.append(cell)
+        
+    def ajoutlines(line):
+        self.tablines.append(line)
+        
+
+
 """Robot-joueur de Pooo
     
     Le module fournit les fonctions suivantes :
