@@ -38,15 +38,16 @@ class Lines:
 
 class Graphe:
     
-    def __init__(self,tabcell,tablines):
+    def __init__(self,tabcell,tablines,listeadj):
         self.tabcell = tabcell
         self.tablines = tablines
+        self.listeadj = listeadj
         
         
     def ajoutcell(cell):
-        self.tabcell.append(cell)
+        self.tabcell.append(cell)                   # MODIFIER POUR LISTEADJ, PUISQUE SI ON AJOUTE UNE CELLULE, LISTEADJ DOIT ETRE MODIFIE
         
-    def ajoutlines(line):
+    def ajoutlines(line):                           # MEME CHOSE
         self.tablines.append(line)
         
 
@@ -129,3 +130,12 @@ def play_pooo():
     # (5)     TODO: traitement de state et transmission d'ordres order(msg)
     pass
     
+    
+    
+#Fonction permettant de créer le paramètre move pour la fonction order(move)
+def setmove(userid,pourcent,cellfrom,cellto):
+    res = ''
+    res = res  + 
+    userid + 'MOV' + str((pourcent*cellfrom.nboff)/100) + 'FROM' + str(cellfrom.idcell) + 'TO' + str(cellto.idcell)
+    return res
+
