@@ -25,8 +25,7 @@ class Cellule:
 
 class Lines:
     
-    def __init__(self,idline,idcell1,idcell2, dist, nbunit):
-        self.idline = idline
+    def __init__(self,idcell1,idcell2, dist, nbunit=0):
         self.idcell1 = idcell1
         self.idcell2 = idcell2
         self.dist = dist
