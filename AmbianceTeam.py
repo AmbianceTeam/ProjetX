@@ -3,7 +3,7 @@
 
 class Cellule:
     
-    def __init__(self,idcell,offsize,defsize,radius,x,y,proddef,prodoff,nboff,nbdef,etat):
+    def __init__(self,idcell,offsize,defsize,radius,x,y,proddef=0,prodoff=0,nboff=0,nbdef=0,etat=0):
         self.idcell = idcell
         self.offsize = offsize
         self.defsize = defsize
@@ -135,7 +135,6 @@ def play_pooo():
 #Fonction permettant de créer le paramètre move pour la fonction order(move)
 def setmove(userid,pourcent,cellfrom,cellto):
     res = ''
-    res = res  + 
-    userid + 'MOV' + str((pourcent*cellfrom.nboff)/100) + 'FROM' + str(cellfrom.idcell) + 'TO' + str(cellto.idcell)
+    res = res  + userid + 'MOV' + str((pourcent*cellfrom.nboff)/100) + 'FROM' + str(cellfrom.idcell) + 'TO' + str(cellto.idcell)
     return res
 
