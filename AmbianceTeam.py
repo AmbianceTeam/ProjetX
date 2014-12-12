@@ -25,9 +25,9 @@ class Cellule:
 
 class Lines:
     
-    def __init__(self,idcell1,idcell2, dist, nbunit=0):
-        self.idcell1 = idcell1
-        self.idcell2 = idcell2
+    def __init__(self,Cell1,Cell2, dist, nbunit=0):
+        self.Cell1 = Cell1 # objet de type Cellule
+        self.Cell2 = Cell2 # objet de type Cellule
         self.dist = dist
         self.nbunit = nbunit
         
@@ -37,9 +37,9 @@ class Lines:
 
 class Graphe:
     
-    def __init__(self,tabcell,tablines,listeadj):
-        self.tabcell = tabcell
-        self.tablines = tablines
+    def __init__(self,listCellules,listLignes,listeadj):
+        self.listCellules = listCellules
+        self.listLignes = listLignes
         self.listeadj = listeadj
         
         
