@@ -76,13 +76,13 @@ def init_terrain(init_str,listCellules,listInfoTerrain):
     
     regex14 = re.compile('[0-9]+@[0-9]+OF[0-9]+')
     lignes_init  = regex14.findall(init_str)
-    print(lignes_init)
+
     
     for j in range (nb_lines): #Recuperation et instanciation des lignes
         
         regex15 = re.compile('[0-9]+@')
         idcell1 = regex15.findall(lignes_init[j])
-        idcell1 = idcell1[0][:-1]
+        idcell1 = int(idcell1[0][:-1])
         
         regex16 = re.compile('@[0-9]+OF')
         dist = regex16.findall(lignes_init[j])
@@ -90,9 +90,9 @@ def init_terrain(init_str,listCellules,listInfoTerrain):
         
         regex17 = re.compile('OF[0-9]+')
         idcell2 = regex17.findall(lignes_init[j])
-        idcell2 = idcell2[0][2:]
+        idcell2 = int(idcell2[0][2:])
         
-        listLignes.append(Lines(idcell1,idcell2,dist))
+        listLignes.append(Lines(listCellules[idcell1-1],listCellules[idcell2-1],dist))
         
         
     return listInfoTerrain
@@ -106,4 +106,4 @@ listInfoTerrain = init_terrain(init_str,listCellules,listInfoTerrain)
 #print(listCellules[0].defsize)
 
 #print(listInfoTerrain[4])
-print(listLignes[1].dist)
+print(listLignes[1].Cell1.x)
