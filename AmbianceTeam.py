@@ -3,15 +3,14 @@
 
 class Cellule:
     
-    def __init__(self,idcell,offsize,defsize,radius,x,y,proddef=0,prodoff=0,nboff=0,nbdef=0,etat=0):
+    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,etat=0):
         self.idcell = idcell
         self.offsize = offsize
         self.defsize = defsize
         self.radius = radius
         self.x = x
         self.y = y
-        self.proddef = proddef
-        self.prodoff = prodoff
+        self.prod = prod
         self.nboff = nboff
         self.nbdef = nbdef
         self.etat = etat
