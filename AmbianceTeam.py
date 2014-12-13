@@ -24,8 +24,8 @@ class Cellule:
 
 class Lines:
     
-    def __init__(self,Cell1,Cell2, dist, nbunit=0):
-        self.Cell1 = Cell1 # objet de type Cellule
+    def __init__(self,Cell1,Cell2, dist, nbunit=0):                             #Penser à différencier les unités qui vont de 1 vers 2, de celles qui vont de 2 vers 1
+        self.Cell1 = Cell1 # objet de type Cellule 
         self.Cell2 = Cell2 # objet de type Cellule
         self.dist = dist
         self.nbunit = nbunit
