@@ -3,7 +3,7 @@
 
 class Cellule:
     
-    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,etat=0):
+    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,etat=0,voisins=[]):
         self.idcell = idcell
         self.offsize = offsize
         self.defsize = defsize
@@ -14,24 +14,29 @@ class Cellule:
         self.nboff = nboff
         self.nbdef = nbdef
         self.etat = etat
+        self.voisins = voisins
     
     def update(self,nboff,nbdef,etat):
         self.nboff = nboff
         self.nbdef = nbdef
         self.etat = etat
         
+
+        
     
 
 class Lines:
     
-    def __init__(self,Cell1,Cell2, dist, nbunit=0):                             #Penser à différencier les unités qui vont de 1 vers 2, de celles qui vont de 2 vers 1
+    def __init__(self,Cell1,Cell2, dist, nbunitfrom1=0, nbunitfrom2=0):                          
         self.Cell1 = Cell1 # objet de type Cellule 
         self.Cell2 = Cell2 # objet de type Cellule
         self.dist = dist
-        self.nbunit = nbunit
+        self.nbunitfrom1 = nbunitfrom1
+        self.nbunitfrom2 = nbunitfrom2
         
-    def update(self,nbunit):
-        self.nbunit = nbunit
+    def update(self,nbunitfrom1,nbunitfrom2):
+        self.nbunitfrom1 = nbunitfrom1
+        self.nbunitfrom2 = nbunitfrom2
         
 
 class Graphe:
@@ -39,13 +44,12 @@ class Graphe:
     def __init__(self,listCellules,listLignes,listeadj):
         self.listCellules = listCellules
         self.listLignes = listLignes
-        self.listeadj = listeadj
         
         
     def ajoutcell(cell):
-        self.tabcell.append(cell)                   # MODIFIER POUR LISTEADJ, PUISQUE SI ON AJOUTE UNE CELLULE, LISTEADJ DOIT ETRE MODIFIE
+        self.tabcell.append(cell)                  
         
-    def ajoutlines(line):                           # MEME CHOSE
+    def ajoutlines(line):                          
         self.tablines.append(line)
         
 
@@ -131,8 +135,7 @@ def play_pooo():
     
     
 #Fonction permettant de créer le paramètre move pour la fonction order(move)
-def setmove(userid,pourcent,cellfrom,cellto):
-    res = ''
-    res = res  + userid + 'MOV' + str((pourcent*cellfrom.nboff)/100) + 'FROM' + str(cellfrom.idcell) + 'TO' + str(cellto.idcell)
+def setmove(userid,pourcent,Cellfrom,Cellto):
+    res =  userid + 'MOV' + str((pourcent*Cellfrom.nboff)/100) + 'FROM' + str(Cellfrom.idcell) + 'TO' + str(Cellto.idcell)
     return res
 
