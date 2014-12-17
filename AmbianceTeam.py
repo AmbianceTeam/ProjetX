@@ -83,7 +83,7 @@ def register_pooo(uid):
     pass
 
 
-def init_pooo(init_string):
+def init_pooo(init_str):
     """Initialise le robot pour un match
         
         :param init_string: instruction du protocole de communication de Pooo (voire ci-dessous)
