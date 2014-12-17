@@ -3,7 +3,10 @@ import re
 from AmbianceTeam import *
 
 
-def init_terrain(init_str,listCellules,listLignes,listInfoTerrain):
+def init_terrain(init_str):
+    listCellules=[]
+    listLignes=[]
+    listInfoTerrain=[]
     
     
     regex1 = re.compile('INIT[A-Za-z0-9-]+TO') # Recuperation de l'id du match
@@ -94,7 +97,7 @@ def init_terrain(init_str,listCellules,listLignes,listInfoTerrain):
         
         listLignes.append(Lines(listCellules[idcell1-1],listCellules[idcell2-1],dist)) #instanciation des Lignes
         
-        
-    return listInfoTerrain
+    
+    return Graphe(listCellules,listLignes,listInfoTerrain)
         
      
