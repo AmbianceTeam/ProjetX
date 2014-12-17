@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from recup_terrain import *
+
 
 
 
@@ -20,16 +20,9 @@ class Cellule:
         self.prod = prod                          # Initialisation de la production d'unités de la cellule
         self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule
         self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule
-        self.etat = etat                          # Initialisation de l'état de la cellule càd à qui elle appartient
+        self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un
         self.voisins = voisins                    # Initialisation du tableau contenant les voisins de la cellule
     
-    
-    # Méthode permettant la mise à jour d'informations non permanentes
-    def update(self,nboff,nbdef,etat):
-        self.nboff = nboff                        # Mise à jour du nombre d'unités offensives présentes dans la cellule
-        self.nbdef = nbdef                        # Mise à jour du nombre d'unités défensives présentes dans la cellule 
-        self.etat = etat                          # Mise à jour de l'état de la cellule, càd son propriétaire
-        
 
         
     
@@ -45,12 +38,7 @@ class Ligne:
         self.nbunitfrom1 = nbunitfrom1            # Initialisation du nombre d'unités venant de la cellule Cell1 présentes sur la ligne 
         self.nbunitfrom2 = nbunitfrom2            # Initialisation du nombre d'unités venant de la cellule Cell2 présentes sur la ligne
     
-    
-    # Méthode permettant la mise à jour d'informations non permanentes
-    def update(self,nbunitfrom1,nbunitfrom2):
-        self.nbunitfrom1 = nbunitfrom1            # Mise à jour du nombre d'unités venant de la cellule Cell1 présentes sur la ligne
-        self.nbunitfrom2 = nbunitfrom2            # Mise à jour du nombre d'unités venant de la cellule Cell2 présentes sur la ligne
-        
+
 
 class Graphe:
     
