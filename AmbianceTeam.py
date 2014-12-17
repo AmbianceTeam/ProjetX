@@ -178,6 +178,7 @@ def init_pooo(init_str):
         prod = regex13.findall(cellules_init[i])
         prod = len(prod[0][1:]) # La vitesse de production est represente par des "I" , on compte donc le nombre de "I" avec un len()
         
+        
         listCellules.append(Cellule(id_cellule,offsize,defsize,radius,x,y,prod)) #instanciation des Cellules
 
     
@@ -201,6 +202,9 @@ def init_pooo(init_str):
         idcell2 = int(idcell2[0][2:])
         
         listLignes.append(Ligne(listCellules[idcell1-1],listCellules[idcell2-1],dist)) #instanciation des Lignes
+    
+    
+    
         
     
     return Graphe(listCellules,listLignes,listInfoTerrain)
