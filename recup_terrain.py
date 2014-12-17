@@ -95,7 +95,7 @@ def init_terrain(init_str):
         idcell2 = regex17.findall(lignes_init[j])
         idcell2 = int(idcell2[0][2:])
         
-        listLignes.append(Lines(listCellules[idcell1-1],listCellules[idcell2-1],dist)) #instanciation des Lignes
+        listLignes.append(Ligne(listCellules[idcell1-1],listCellules[idcell2-1],dist)) #instanciation des Lignes
         
     
     return Graphe(listCellules,listLignes,listInfoTerrain)
