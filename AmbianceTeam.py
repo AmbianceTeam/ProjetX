@@ -42,8 +42,8 @@ class Ligne:
         self.Cell1 = Cell1                        # objet de type Cellule 
         self.Cell2 = Cell2                        # objet de type Cellule
         self.dist = dist                          # Distance entre les deux cellules
-        self.nbunitfrom1 = nbunitfrom1            # Nombre d'unités venant de la cellule Cell1 présentes sur la ligne 
-        self.nbunitfrom2 = nbunitfrom2            # Nombre d'unités venant de la cellule Cell2 présentes sur la ligne
+        self.nbunitfrom1 = nbunitfrom1            # Initialisation du nombre d'unités venant de la cellule Cell1 présentes sur la ligne 
+        self.nbunitfrom2 = nbunitfrom2            # Initialisation du nombre d'unités venant de la cellule Cell2 présentes sur la ligne
     
     
     # Méthode permettant la mise à jour d'informations non permanentes
