@@ -25,7 +25,7 @@ class Cellule:
         
     
 
-class Lines:
+class Ligne:
     
     def __init__(self,Cell1,Cell2, dist, nbunitfrom1=0, nbunitfrom2=0):                          
         self.Cell1 = Cell1 # objet de type Cellule 
@@ -45,13 +45,6 @@ class Graphe:
         self.listCellules = listCellules
         self.listLignes = listLignes
         self.listInfoTerrain = listInfoTerrain
-        
-        
-    def ajoutcell(cell):
-        self.tabcell.append(cell)                  
-        
-    def ajoutlines(line):                          
-        self.tablines.append(line)
         
 
 
