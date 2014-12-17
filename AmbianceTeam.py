@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from recup_terrain import *
 
 class Cellule:
     
@@ -41,9 +41,10 @@ class Lines:
 
 class Graphe:
     
-    def __init__(self,listCellules,listLignes,listeadj):
+    def __init__(self,listCellules,listLignes,listInfoTerrain):
         self.listCellules = listCellules
         self.listLignes = listLignes
+        self.listInfoTerrain = listInfoTerrain
         
         
     def ajoutcell(cell):
@@ -113,7 +114,8 @@ def init_pooo(init_string):
         "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
         
     """
-    pass
+    
+    return init_terrain(init_string) # Objet de type graphe
     
     
     
@@ -139,3 +141,12 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
     res =  userid + 'MOV' + str((pourcent*Cellfrom.nboff)/100) + 'FROM' + str(Cellfrom.idcell) + 'TO' + str(Cellto.idcell)
     return res
 
+
+def main() :
+    
+    init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
+    Map = init_pooo(init_string) # Instanciation de Map (objet Graphe)
+    print(Map.listInfoTerrain)
+    
+if __name__ == '__main__':
+    main()
