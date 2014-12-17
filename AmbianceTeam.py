@@ -1,42 +1,55 @@
 # -*- coding: utf-8 -*-
 from recup_terrain import *
 
+
+
+
+# Définition de la classe Cellule
 class Cellule:
     
+    
+    # Fonction d'initialisation
     def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,etat=0,voisins=[]):
-        self.idcell = idcell
-        self.offsize = offsize
-        self.defsize = defsize
-        self.radius = radius
-        self.x = x
-        self.y = y
-        self.prod = prod
-        self.nboff = nboff
-        self.nbdef = nbdef
-        self.etat = etat
-        self.voisins = voisins
+        
+        self.idcell = idcell                      # Initialisation de l'id de la cellule
+        self.offsize = offsize                    # Initialisation de la capacité offensive de la cellule
+        self.defsize = defsize                    # Initialisation de la capacité défensive de la cellule
+        self.radius = radius                      # Initialisation du rayon de la cellule
+        self.x = x                                # Initialisation de l'abcisse de la cellule
+        self.y = y                                # Initialisation de l'ordonnée de la cellule
+        self.prod = prod                          # Initialisation de la production d'unités de la cellule
+        self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule
+        self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule
+        self.etat = etat                          # Initialisation de l'état de la cellule càd à qui elle appartient
+        self.voisins = voisins                    # Initialisation du tableau contenant les voisins de la cellule
     
+    
+    # Méthode permettant la mise à jour d'informations non permanentes
     def update(self,nboff,nbdef,etat):
-        self.nboff = nboff
-        self.nbdef = nbdef
-        self.etat = etat
+        self.nboff = nboff                        # Mise à jour du nombre d'unités offensives présentes dans la cellule
+        self.nbdef = nbdef                        # Mise à jour du nombre d'unités défensives présentes dans la cellule 
+        self.etat = etat                          # Mise à jour de l'état de la cellule, càd son propriétaire
         
 
         
     
-
+# Définition de la classe Ligne
 class Ligne:
     
+   
+    # Fonction d'initialisation 
     def __init__(self,Cell1,Cell2, dist, nbunitfrom1=0, nbunitfrom2=0):                          
-        self.Cell1 = Cell1 # objet de type Cellule 
-        self.Cell2 = Cell2 # objet de type Cellule
-        self.dist = dist
-        self.nbunitfrom1 = nbunitfrom1
-        self.nbunitfrom2 = nbunitfrom2
-        
+        self.Cell1 = Cell1                        # objet de type Cellule 
+        self.Cell2 = Cell2                        # objet de type Cellule
+        self.dist = dist                          # Distance entre les deux cellules
+        self.nbunitfrom1 = nbunitfrom1            # Nombre d'unités venant de la cellule Cell1 présentes sur la ligne 
+        self.nbunitfrom2 = nbunitfrom2            # Nombre d'unités venant de la cellule Cell2 présentes sur la ligne
+    
+    
+    # Méthode permettant la mise à jour d'informations non permanentes
     def update(self,nbunitfrom1,nbunitfrom2):
-        self.nbunitfrom1 = nbunitfrom1
-        self.nbunitfrom2 = nbunitfrom2
+        self.nbunitfrom1 = nbunitfrom1            # Mise à jour du nombre d'unités venant de la cellule Cell1 présentes sur la ligne
+        self.nbunitfrom2 = nbunitfrom2            # Mise à jour du nombre d'unités venant de la cellule Cell2 présentes sur la ligne
         
 
 class Graphe:
