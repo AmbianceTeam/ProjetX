@@ -4,8 +4,11 @@
 import re
 from AmbianceTeam import *
 
+init_string="INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
 
-def decrypt_state():
+Map = init_pooo(init_string)
+
+def decrypt_state(graph):
     
     state_str = "STATE20ac18ab-6d18-450e-94af-bee53fdc8fcaIS2;3CELLS:1[2]12'4,2[2]15'2,3[1]33'6;4MOVES:1<5[2]@232'>6[2]@488'>3[1]@4330'2,1<10[1]@2241'3"
 
@@ -33,27 +36,31 @@ def decrypt_state():
     info_moves = regex6.findall(state_str)                                      #Liste avec (infos de déplacement entre 2 cellules, truc qui sert à rien mais je vois pas comment faire autrement)
 
     
-    print(info_cells)    
+    print(info_moves)    
     
-    for i in range(nb_cells):                                                   #Recupération des infos sur les cellules
+    for i in range(nb_cells):                                                   #Recupération des infos sur les cellules (boucle qui parcourt chaque objet cellule pour actualiser les infos)
         
-        regex7 = re.compile('[0-9]+\[')
-        res = regex7.findall(info_cells[i])
-        cell_id = res[0][0:-1]
         
-        regex8 = re.compile('\[[0-9]+\]')
+        regex8 = re.compile('\[[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
-        etat = res[0][1:-1]
+        graph.listCellules[i].etat = res[0][1:-1]
         
-        regex9 = re.compile('[0-9]+\'')
+        regex9 = re.compile('[0-9]+\'')                                         #MàJ du nombre d'unités offensives actuel de la cellule
         res = regex9.findall(info_cells[i])
-        off_units = res[0][0:-1]
+        graph.listCellules[i].nboff = res[0][0:-1]
         
-        regex10 = re.compile('\'[0-9]+')
-        res1 = regex9.findall(info_cells[i])
-        def_units = res1[0][1::]
+        regex10 = re.compile('\'[0-9]+')                                        #MàJ du nombre d'unités défensives actuel de la cellule
+        res = regex10.findall(info_cells[i])
+        graph.listCellules[i].nbdef = res[0][1::]
         
-        print(res1)
+    for i in range(nb_moves):
+        
+        regex11 = re.compile('[<>]')
+        res = regex11.findall(info_moves[i])
+        res = res[0]
+        
+        print(res)
+        
         
     
 
@@ -64,4 +71,4 @@ def decrypt_state():
     
     
     
-decrypt_state()
+decrypt_state(Map)
