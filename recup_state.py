@@ -35,7 +35,7 @@ def decrypt_state():
     
     print(info_cells)    
     
-    for i in range(nb_cells):
+    for i in range(nb_cells):                                                   #Recupération des infos sur les cellules
         
         regex7 = re.compile('[0-9]+\[')
         res = regex7.findall(info_cells[i])
@@ -45,7 +45,15 @@ def decrypt_state():
         res = regex8.findall(info_cells[i])
         etat = res[0][1:-1]
         
-        print(etat)
+        regex9 = re.compile('[0-9]+\'')
+        res = regex9.findall(info_cells[i])
+        off_units = res[0][0:-1]
+        
+        regex10 = re.compile('\'[0-9]+')
+        res1 = regex9.findall(info_cells[i])
+        def_units = res1[0][1::]
+        
+        print(res1)
         
     
 
