@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import re
 
 
 
@@ -9,7 +9,7 @@ class Cellule:
     
     
     # Fonction d'initialisation
-    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,etat=0,voisins=[]):
+    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=0):
         
         self.idcell = idcell                      # Initialisation de l'id de la cellule
         self.offsize = offsize                    # Initialisation de la capacité offensive de la cellule
@@ -21,7 +21,7 @@ class Cellule:
         self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule
         self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule
         self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un
-        self.voisins = voisins                    # Initialisation du tableau contenant les voisins de la cellule
+        self.voisins = []                # Initialisation du tableau contenant les voisins de la cellule
     
 
         
@@ -202,7 +202,11 @@ def init_pooo(init_str):
         idcell2 = int(idcell2[0][2:])
         
         listLignes.append(Ligne(listCellules[idcell1-1],listCellules[idcell2-1],dist)) #instanciation des Lignes
-    
+
+        listCellules[idcell1-1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell2-1])) # on ajoute dans les voisins de la cellule1 (cellid1) la ligne dernièrement ajouté et la cellule2 (cellid2)
+        listCellules[idcell2-1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell1-1])) # on ajoute dans les voisins de la cellule2 (cellid2) la ligne dernièrement ajouté et la cellule1 (cellid1)
+
+        #print("idcell1 : " + str(idcell1) + " ; idcell2 : " + str(idcell2))
     
     
         
@@ -238,7 +242,10 @@ def main() :
     
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
     Map = init_pooo(init_string) # Instanciation de la Map (objet Graphe)
-    print(Map.listInfoTerrain)
+    print(Map.listCellules[0].voisins[1])
+    print(Map.listLignes[1])
+    print(Map.listCellules[2])
+
     
 if __name__ == '__main__':
     main()
