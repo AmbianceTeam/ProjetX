@@ -9,7 +9,7 @@ class Cellule:
     
     
     # Fonction d'initialisation
-    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=0):
+    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=-1): #-1 pour le neutre
         
         self.idcell = idcell                      # Initialisation de l'id de la cellule
         self.offsize = offsize                    # Initialisation de la capacité offensive de la cellule
@@ -208,7 +208,8 @@ def init_pooo(init_str):
 
         #print("idcell1 : " + str(idcell1) + " ; idcell2 : " + str(idcell2))
     
-    
+        
+        
         
     
     return Graphe(listCellules,listLignes,listInfoTerrain)
@@ -239,7 +240,6 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 
 
 def main() :
-    
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
     Map = init_pooo(init_string) # Instanciation de la Map (objet Graphe)
     print(Map.listCellules[0].voisins[1])
