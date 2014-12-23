@@ -3,7 +3,10 @@ from AmbianceTeam import *
 from recup_terrain import *
 from tkinter import *
 
-def dessiner_terrain(w,listInfoTerrain,listCellules,listLignes):
+def dessiner_terrain(w,Graphe):
+    listCellules = Graphe.listCellules
+    listLignes = Graphe.listLignes
+    listInfoTerrain = Graphe.listInfoTerrain
     listCouleurs=["#D0D0D0","#4628DC","#C82525"]
     
     offsetX = 50 # valeur de décalage en X
@@ -30,6 +33,8 @@ def dessiner_terrain(w,listInfoTerrain,listCellules,listLignes):
         w.create_circle(listCellules[i].x*scaleX+offsetX, listCellules[i].y*scaleY+offsetY, (listCellules[i].radius)*15, fill=listCouleurs[listCellules[i].etat], outline="#FCFCFC", width=2)
         w.create_text(listCellules[i].x*scaleX+offsetX,listCellules[i].y*scaleY+offsetY,text=str(listCellules[i].nboff),fill="white",anchor="s")
         w.create_text(listCellules[i].x*scaleX+offsetX,listCellules[i].y*scaleY+offsetY,text="I"*listCellules[i].prod,fill="white",anchor="n")
+    
+    
         
 def _create_circle(self, x, y, r, **kwargs):
     return self.create_oval(x-r, y-r, x+r, y+r, **kwargs)
@@ -50,25 +55,16 @@ w. pack ()
 
 init_str = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
 
-listInfoTerrain=[]
-listCellules=[]
-listLignes=[]
+Map = init_pooo(init_str)
 
-listInfoTerrain = init_terrain(init_str,listCellules,listLignes,listInfoTerrain)
-listCellules[0].etat=1
-#listCellules[1].etat=1
-listCellules[0].nboff = 5126
-listCellules[1].etat=1
-listCellules[2].etat=2
-
-print(listLignes[1].Cell1.x)
+print(Map.listLignes[1].Cell1.x)
 
 
 
 #main loop to allow interaction
-dessiner_terrain(w,listInfoTerrain,listCellules,listLignes)
+dessiner_terrain(w,Map)
 
-mainloop ()
+mainloop()
 
 
     
