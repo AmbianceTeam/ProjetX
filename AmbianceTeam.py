@@ -21,7 +21,7 @@ class Cellule:
         self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule
         self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule
         self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un
-        self.voisins = []                # Initialisation du tableau contenant les voisins de la cellule
+        self.voisins = []                         # Initialisation du tableau contenant les voisins de la cellule
     
 
         
@@ -31,7 +31,8 @@ class Ligne:
     
    
     # Fonction d'initialisation 
-    def __init__(self,Cell1,Cell2, dist, nbunitfrom1=0, nbunitfrom2=0):                          
+    def __init__(self,idline,Cell1,Cell2, dist, nbunitfrom1=0, nbunitfrom2=0):   
+        self.idline = idline                      # Numéro de ligne
         self.Cell1 = Cell1                        # objet de type Cellule 
         self.Cell2 = Cell2                        # objet de type Cellule
         self.dist = dist                          # Distance entre les deux cellules
@@ -201,10 +202,12 @@ def init_pooo(init_str):
         idcell2 = regex17.findall(lignes_init[j])
         idcell2 = int(idcell2[0][2:])
         
-        listLignes.append(Ligne(listCellules[idcell1-1],listCellules[idcell2-1],dist)) #instanciation des Lignes
+        idline = j+1                    #Association d'un numéro ID à chaque ligne
+        
+        listLignes.append(Ligne(idline,listCellules[idcell1-1],listCellules[idcell2-1],dist)) #instanciation des Lignes
 
-        listCellules[idcell1-1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell2-1])) # on ajoute dans les voisins de la cellule1 (cellid1) la ligne dernièrement ajouté et la cellule2 (cellid2)
-        listCellules[idcell2-1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell1-1])) # on ajoute dans les voisins de la cellule2 (cellid2) la ligne dernièrement ajouté et la cellule1 (cellid1)
+        listCellules[idcell1-1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell2-1])) # on ajoute dans les voisins de la cellule1 (cellid1) l'objet ligne dernièrement ajouté et l'objet cellule2 (cellid2)
+        listCellules[idcell2-1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell1-1])) # on ajoute dans les voisins de la cellule2 (cellid2) l'objet ligne dernièrement ajouté et l'objet cellule1 (cellid1)
 
         #print("idcell1 : " + str(idcell1) + " ; idcell2 : " + str(idcell2))
     

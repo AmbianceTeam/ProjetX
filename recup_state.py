@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #Fonction pas encore terminée 
 
 
@@ -37,6 +38,7 @@ def decrypt_state(graph):
 
     
     print(info_moves)    
+
     
     for i in range(nb_cells):                                                   #Recupération des infos sur les cellules (boucle qui parcourt chaque objet cellule pour actualiser les infos)
         
@@ -53,13 +55,30 @@ def decrypt_state(graph):
         res = regex10.findall(info_cells[i])
         graph.listCellules[i].nbdef = res[0][1::]
         
-    for i in range(nb_moves):
+    for i in range(len(info_moves)):
+        
+        regex12 = re.compile('[0-9]+[<>]')                                      #Récupération de la premiere cell composant la ligne
+        res = regex12.findall(info_moves[i][0])
+        cell1 = int(res[0][0:-1])
+        
+        regex13 = re.compile('\'[0-9]+')                                        #Récupération de la 2eme cellule composant la ligne
+        res = regex13.findall(info_moves[i][0])
+        cell2 = int(res[0][1::])
+        
+        for j in range(len(graph.listCellules[cell1-1].voisins)):               #Récupération de l'ID de la ligne correspondant aux 2 cellules récupérées
+     
+            if graph.listCellules[cell1-1].voisins[j][1].idcell == cell2 :
+                line = graph.listCellules[cell1-1].voisins[j][0].idline
+            print('ligne ',line)
+        
         
         regex11 = re.compile('[<>]')
-        res = regex11.findall(info_moves[i])
-        res = res[0]
+        sens = regex11.findall(info_moves[i][0])                                #Recupération du sens des unités
         
-        print(res)
+        
+        
+        
+        print(sens)
         
         
     
