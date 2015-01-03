@@ -331,6 +331,17 @@ def play_pooo():
         
     celluleMere = Map.listCellules[i] # On récupère cette cellule mère et on la stocke dans une variable 
 
+
+    #---------------------------------------------------------------#
+    maCouleur = Map.listInfoTerrain[2] # On récupère notre couleur 
+    
+    for j in range (Map.listInfoTerrain[4]-1): # On parcourt la liste des Cellules
+        if(Map.listCellules[j].couleur == maCouleur):
+            CelluleDepart = Map.listCellules[j] 
+            break # Quand on trouve la cellule de départ, on arrête la boucle
+        
+        
+        
     # (3) while True :
     # (4)     state = state_on_update()    
     # (5)     TODO: traitement de state et transmission d'ordres order(msg)
