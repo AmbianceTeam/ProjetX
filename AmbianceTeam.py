@@ -13,14 +13,14 @@ class Cellule:
     # Fonction d'initialisation
     def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=-1): #-1 pour le neutre
         
-        self.idcell = idcell                      # Initialisation de l'id de la cellule
-        self.offsize = offsize                    # Initialisation de la capacité offensive de la cellule
-        self.defsize = defsize                    # Initialisation de la capacité défensive de la cellule
-        self.radius = radius                      # Initialisation du rayon de la cellule
-        self.x = x                                # Initialisation de l'abcisse de la cellule
-        self.y = y                                # Initialisation de l'ordonnée de la cellule
-        self.prod = prod                          # Initialisation de la production d'unités de la cellule. 
-        self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule. Type : entier
+        self.idcell = idcell                      # Initialisation de l'id de la cellule Type : entier
+        self.offsize = offsize                    # Initialisation de la capacité offensive de la cellule Type : entier
+        self.defsize = defsize                    # Initialisation de la capacité défensive de la cellule Type : entier
+        self.radius = radius                      # Initialisation du rayon de la cellule Type : entier
+        self.x = x                                # Initialisation de l'abcisse de la cellule Type : entier
+        self.y = y                                # Initialisation de l'ordonnée de la cellule Type : entier
+        self.prod = prod                          # Initialisation de la production d'unités de la cellule. Type : entier
+        self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule. Type : entier 
         self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule. Type : entier
         self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un. Type : entier
         self.voisins = []                         # Initialisation du tableau contenant les voisins de la cellule. Type : objet Cellule
