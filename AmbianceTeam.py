@@ -321,18 +321,8 @@ def play_pooo():
     # (2) TODO: traitement de init_state
     Map = init_pooo(init_string) # On initialise Map qui est un objet de type Graphe 
     
-    # Section recherche de la cellule mère
-    
-    i = 0 # Compteur pour parcourir listCellules
-    maCouleur = Map.listInfoTerrain[2]
-    # On parcourt listCellules jusqu'à ce qu'on ait trouvé notre cellule mère, en faisant attention de ne pas dépasser la taille de listCellules <-------------- (si jamais on a pas de cellule mère, normalement impossible mais bon ^^
-    while i != range(len(Map.listCellules))-1 and maCouleur != Map.listCellules[i].couleur:
-        i = i+1 # Incrémentation du compteur
-        
-    celluleMere = Map.listCellules[i] # On récupère cette cellule mère et on la stocke dans une variable 
+    # Section recherche de la cellule mèr
 
-
-    #---------------------------------------------------------------#
     maCouleur = Map.listInfoTerrain[2] # On récupère notre couleur 
     
     for j in range (Map.listInfoTerrain[4]-1): # On parcourt la liste des Cellules
@@ -340,7 +330,7 @@ def play_pooo():
             CelluleDepart = Map.listCellules[j] 
             break # Quand on trouve la cellule de départ, on arrête la boucle
         
-        
+    #---------------------------------------------------------------#
         
     # (3) while True :
     # (4)     state = state_on_update()    
