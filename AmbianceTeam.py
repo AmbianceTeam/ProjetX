@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
+import poooc
+from pooogame import state, state_on_update
 
 
 
@@ -311,13 +313,31 @@ def play_pooo():
     logging.info('Entering play_pooo fonction from {} module...'.format(inspect.currentframe().f_back.f_code.co_filename))
     ### Début stratégie joueur ### 
     # séquence type :
+    
     # (1) récupère l'état initial 
     # init_state = state()
+    init_state = state()
+    
     # (2) TODO: traitement de init_state
+    Map = init_pooo(init_state) # On initialise Map qui est un objet de type Graphe 
+
     # (3) while True :
     # (4)     state = state_on_update()    
     # (5)     TODO: traitement de state et transmission d'ordres order(msg)
-    pass
+    
+    while True:
+        state = state_on_update()
+        # Mise à jour de la Map :
+        decrypt_state(Map,state)
+        
+        ####### IA ########
+        
+        
+        
+        
+        ####### FIN IA ########
+    
+    
     
     
     
