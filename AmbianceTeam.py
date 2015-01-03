@@ -48,7 +48,7 @@ class Graphe:
     def __init__(self,listCellules,listLignes,listInfoTerrain):
         self.listCellules = listCellules
         self.listLignes = listLignes
-        self.listInfoTerrain = listInfoTerrain
+        self.listInfoTerrain = listInfoTerrain # liste contenant : match_id, nb_players, no_color, speed, nb_cells, nb_lines
         
 
 
