@@ -324,11 +324,12 @@ def play_pooo():
     # Section recherche de la cellule mère
     
     i = 0 # Compteur pour parcourir listCellules
+    maCouleur = ''
     # On parcourt listCellules jusqu'à ce qu'on ait trouvé notre cellule mère, en faisant attention de ne pas dépasser la taille de listCellules <-------------- (si jamais on a pas de cellule mère, normalement impossible mais bon ^^
-    while i != range(len(Map.listCellules))-1 and maCouleur != Map.listeCellules[i].couleur:
+    while i != range(len(Map.listCellules))-1 and maCouleur != Map.listCellules[i].couleur:
         i = i+1 # Incrémentation du compteur
         
-    celluleMere = Map.listeCellules[i] # On récupère cette cellule mère et on la stocke dans une variable 
+    celluleMere = Map.listCellules[i] # On récupère cette cellule mère et on la stocke dans une variable 
 
     # (3) while True :
     # (4)     state = state_on_update()    
