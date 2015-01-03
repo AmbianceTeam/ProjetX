@@ -17,11 +17,11 @@ class Cellule:
         self.radius = radius                      # Initialisation du rayon de la cellule
         self.x = x                                # Initialisation de l'abcisse de la cellule
         self.y = y                                # Initialisation de l'ordonnée de la cellule
-        self.prod = prod                          # Initialisation de la production d'unités de la cellule
-        self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule
-        self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule
-        self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un
-        self.voisins = []                         # Initialisation du tableau contenant les voisins de la cellule
+        self.prod = prod                          # Initialisation de la production d'unités de la cellule. 
+        self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule. Type : entier
+        self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule. Type : entier
+        self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un. Type : entier
+        self.voisins = []                         # Initialisation du tableau contenant les voisins de la cellule. Type : objet Cellule
     
 
         
@@ -330,13 +330,12 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 def main() :
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
     Map = init_pooo(init_string) # Instanciation de la Map (objet Graphe)
-    #print(Map.listCellules[0].voisins[1])
+    print(Map.listCellules[0].prod)
     #print(Map.listLignes[1])
     #print(Map.listCellules[2])
     state_str = "STATE20ac18ab-6d18-450e-94af-bee53fdc8fcaIS2;3CELLS:1[2]12'4,2[2]15'2,3[1]33'6;4MOVES:1<5[2]@232'>6[2]@488'>3[1]@4330'2,1<10[1]@2241'3"
     decrypt_state(Map,state_str)
-    print(Map.listLignes[0].nbunitfrom1)
-    print(Map.listCellules[1].nboff)
+
     
 if __name__ == '__main__':
     main()
