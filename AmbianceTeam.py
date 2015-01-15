@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import poooc
-from poooc import order, state, state_on_update, etime
+from pooogame import state, state_on_update
 
 
 
@@ -23,7 +23,7 @@ class Cellule:
         self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule. Type : entier 
         self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule. Type : entier
         self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un. Type : entier
-        self.voisins = []                         # Initialisation du tableau contenant les voisins de la cellule. Type : objet Cellule
+        self.voisins = []                         # Initialisation du tableau contenant les voisins de la cellule. Type : tuple (objet Ligne,objet Cellule correspondant)
     
 
         
@@ -332,29 +332,23 @@ def play_pooo():
     
     # (2) TODO: traitement de init_state
     Map = init_pooo(init_string)                                                # On initialise Map qui est un objet de type Graphe 
-    
-    # Section recherche de la cellule mèr
+    init_state = state()
+    decrypt_state(Map,init_state)                                               # Initialisation des informations de state
 
     maCouleur = Map.listInfoTerrain[2]                                          # On récupère notre couleur 
     
-    for j in range (Map.listInfoTerrain[4]-1):                                  # On parcourt la liste des Cellules
-        if(Map.listCellules[j].couleur == maCouleur):
-            CelluleDepart = Map.listCellules[j] 
-            break                                                               # Quand on trouve notre cellule, on arrête la boucle
-        
-    #---------------------------------------------------------------#
-        
-    # (3) while True :
-    # (4)     state = state_on_update()    
-    # (5)     TODO: traitement de state et transmission d'ordres order(msg)
     
     while True:
         state = state_on_update()
         # Mise à jour de la Map :
         decrypt_state(Map,state)
+        listvoisinsneutre = []
         
         ####### IA ########
-        
+        for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
+            for j in range(len(Map.cellAlly[i].voisins)):                       # pour chaque cell alliée, on parcourt ses voisins
+                if Map.cellAlly[i].voisins[j].couleur == -1 :                   
+                    listvoisinsneutre.append(Map.cellAlly[i].voisins[j])        # Dès qu'on rencontre un voisin neutre on l'ajoute dans une liste
         
         
         
