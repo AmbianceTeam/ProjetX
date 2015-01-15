@@ -45,11 +45,13 @@ class Ligne:
 
 class Graphe:
     
-    def __init__(self,listCellules,listLignes,listInfoTerrain):
+    def __init__(self,listCellules,listLignes,listInfoTerrain, cellAlly = [], cellEnem = [], cellNeut = []):
         self.listCellules = listCellules
         self.listLignes = listLignes
-        self.listInfoTerrain = listInfoTerrain # liste contenant : match_id, nb_players, no_color, speed, nb_cells, nb_lines
-        
+        self.listInfoTerrain = listInfoTerrain                          # liste contenant : match_id, nb_players, no_color, speed, nb_cells, nb_lines
+        self.cellAlly = cellAlly                                        # liste contenant les objets Cellule alliés
+        self.cellEnem = cellEnem                                        # liste contenant les objets Cellule Ennemis
+        self.cellNeut = cellNeut                                        # liste contenant les objets Cellule neutres
 
 
 """Robot-joueur de Pooo
@@ -255,11 +257,22 @@ def decrypt_state(graph,state_str):                                             
     
     for i in range(nb_cells):                                                   #Recupération des infos sur les cellules (boucle qui parcourt chaque objet cellule pour actualiser les infos)
         
+        graph.cellAlly = []                                                     # Réinit des listes de cellules (alliées, ennemies et neutres)
+        graph.cellEnem = []
+        graph.cellNeut = []
         
         regex8 = re.compile('\[[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
+        color = res[0][1:-1]
         graph.listCellules[i].etat = res[0][1:-1]
         
+        if color == graph.listInfoTerrain[2] :                                  # Ajout des cellules alliées, ennemies ou neutres dans leur liste repective
+            graph.cellAlly.append(graph.listCellules[i])
+        elif color == -1 :
+            graph.cellNeut.append(graph.listCellules[i])
+        else :
+            graph.cellEnem.append(graph.listCellules[i])
+            
         regex9 = re.compile('[0-9]+\'')                                         #MàJ du nombre d'unités offensives actuel de la cellule
         res = regex9.findall(info_cells[i])
         graph.listCellules[i].nboff = res[0][0:-1]
@@ -268,7 +281,7 @@ def decrypt_state(graph,state_str):                                             
         res = regex10.findall(info_cells[i])
         graph.listCellules[i].nbdef = res[0][1::]
         
-    for i in range(len(info_moves)):
+    for i in range(len(info_moves)):                                            # Récupération des infos sur les mouvements des unités
         
         graph.listLignes[i].nbunitfrom2 = []                                    #Réinitialisation des listes comportant les infos sur les unités en mvt sur chaque ligne
         graph.listLignes[i].nbunitfrom1 = []
@@ -285,7 +298,6 @@ def decrypt_state(graph,state_str):                                             
             if graph.listCellules[cell1-1].voisins[j][1].idcell == cell2 :
                 line = graph.listCellules[cell1-1].voisins[j][0].idline
                 
-        
         
         regex11 = re.compile('[<>]')
         sens = regex11.findall(info_moves[i][0])                                #Recupération du sens des unités
