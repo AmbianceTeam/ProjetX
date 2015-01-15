@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import poooc
-from pooogame import state, state_on_update
+from poooc import order, state, state_on_update, etime
 
 
 
