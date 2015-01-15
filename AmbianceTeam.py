@@ -319,16 +319,16 @@ def play_pooo():
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3" # donné par le serveur , mais par quelle fonction ? 
     
     # (2) TODO: traitement de init_state
-    Map = init_pooo(init_string) # On initialise Map qui est un objet de type Graphe 
+    Map = init_pooo(init_string)                                                # On initialise Map qui est un objet de type Graphe 
     
     # Section recherche de la cellule mèr
 
-    maCouleur = Map.listInfoTerrain[2] # On récupère notre couleur 
+    maCouleur = Map.listInfoTerrain[2]                                          # On récupère notre couleur 
     
-    for j in range (Map.listInfoTerrain[4]-1): # On parcourt la liste des Cellules
+    for j in range (Map.listInfoTerrain[4]-1):                                  # On parcourt la liste des Cellules
         if(Map.listCellules[j].couleur == maCouleur):
             CelluleDepart = Map.listCellules[j] 
-            break # Quand on trouve la cellule de départ, on arrête la boucle
+            break                                                               # Quand on trouve notre cellule, on arrête la boucle
         
     #---------------------------------------------------------------#
         
