@@ -265,7 +265,7 @@ def decrypt_state(graph,state_str):                                             
         graph.listCellules[i].voisinsEnem = []
         graph.listCellules[i].voisinsNeut = []
         
-        regex8 = re.compile('\[[0-9]+\]')                                       #MàJ de la couleur de la cellule
+        regex8 = re.compile('\[-[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
         color = res[0][1:-1]
         graph.listCellules[i].couleur = int(res[0][1:-1])
