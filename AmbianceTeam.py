@@ -89,7 +89,7 @@ def register_pooo(uid):
 
     """
     global userid
-    userid = "REG"+uid
+    userid = uid
 
 
 def init_pooo(init_str):
@@ -211,10 +211,10 @@ def init_pooo(init_str):
         
         idline = j+1                    #Association d'un numéro ID à chaque ligne
         
-        listLignes.append(Ligne(idline,listCellules[idcell1-1],listCellules[idcell2-1],dist)) #instanciation des Lignes
+        listLignes.append(Ligne(idline,listCellules[idcell1],listCellules[idcell2],dist)) #instanciation des Lignes
 
-        listCellules[idcell1-1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell2-1])) # on ajoute dans les voisins de la cellule1 (cellid1) l'objet ligne dernièrement ajouté et l'objet cellule2 (cellid2)
-        listCellules[idcell2-1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell1-1])) # on ajoute dans les voisins de la cellule2 (cellid2) l'objet ligne dernièrement ajouté et l'objet cellule1 (cellid1)
+        listCellules[idcell1].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell2])) # on ajoute dans les voisins de la cellule1 (cellid1) l'objet ligne dernièrement ajouté et l'objet cellule2 (cellid2)
+        listCellules[idcell2].voisins.append((listLignes[len(listLignes)-1],listCellules[idcell1])) # on ajoute dans les voisins de la cellule2 (cellid2) l'objet ligne dernièrement ajouté et l'objet cellule1 (cellid1)
 
         #print("idcell1 : " + str(idcell1) + " ; idcell2 : " + str(idcell2))
     
@@ -246,6 +246,7 @@ def decrypt_state(graph,state_str):                                             
     res = regex3.findall(state_str)
     nb_cells = int(res[0][1:-5])
     
+    
     regex4 = re.compile('[0-9]+\[\-?[0-9]+\][0-9]+\'[0-9]')                        #Récupération de des informations sur les cellulles sous forme de liste
     info_cells = regex4.findall(state_str)
     
@@ -255,7 +256,8 @@ def decrypt_state(graph,state_str):                                             
     
     regex6 = re.compile('([0-9]+([<>][0-9]+\[[0-9]+\]@[0-9]+\')+[0-9]+)')    
     info_moves = regex6.findall(state_str)                                      #Liste avec (infos de déplacement entre 2 cellules + truc qui sert à rien mais je vois pas comment faire autrement)
-
+    
+    
     
    
     for i in range(nb_cells):                                                   #Recupération des infos sur les cellules (boucle qui parcourt chaque objet cellule pour actualiser les infos)
@@ -266,8 +268,7 @@ def decrypt_state(graph,state_str):                                             
         
         regex8 = re.compile('\[\-?[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
-        
-        color = res[0][1:-1]
+        color = int(res[0][1:-1])
         graph.listCellules[i].couleur = int(res[0][1:-1])
         
         if color == graph.listInfoTerrain[2] :                                  # Ajout des cellules alliées, ennemies ou neutres dans leur liste repective
@@ -286,16 +287,17 @@ def decrypt_state(graph,state_str):                                             
         graph.listCellules[i].nbdef = int(res[0][1::])
         
     for i in range(nb_cells):
+        
         for j in range(len(graph.listCellules[i].voisins)):                     # Ajout des voisins de la cellule dans des listes en fonction de leur statut (Neutre, allié ou ennemi)
             
-            if graph.listCellules[i].voisins[j][1].couleur == -1 :
+            if graph.listCellules[i].voisins[j][1].couleur == int(-1) :
                 
                 graph.listCellules[i].voisinsNeut.append(graph.listCellules[i].voisins[j][1])
                 
             if graph.listCellules[i].voisins[j][1].couleur == graph.listInfoTerrain[2] :
                 graph.listCellules[i].voisinsAlly.append(graph.listCellules[i].voisins[j][1])
                 
-            else :
+            elif graph.listCellules[i].voisins[j][1].couleur != int(-1) and graph.listCellules[i].voisins[j][1].couleur != graph.listInfoTerrain[2] :
                 graph.listCellules[i].voisinsEnem.append(graph.listCellules[i].voisins[j][1])       
         
     for i in range(len(info_moves)):                                            # Récupération des infos sur les mouvements des unités
@@ -311,9 +313,11 @@ def decrypt_state(graph,state_str):                                             
         res = regex13.findall(info_moves[i][0])
         cell2 = int(res[0][1::])
         
-        for j in range(len(graph.listCellules[cell1-1].voisins)):               #Récupération de l'ID de la ligne correspondant aux 2 cellules récupérées
-            if graph.listCellules[cell1-1].voisins[j][1].idcell == cell2 :
-                line = graph.listCellules[cell1-1].voisins[j][0].idline
+        for j in range(len(graph.listCellules[cell1].voisins)):               #Récupération de l'ID de la ligne correspondant aux 2 cellules récupérées
+            
+            if graph.listCellules[cell1].voisins[j][1].idcell == cell2 :
+                line = graph.listCellules[cell1].voisins[j][0].idline
+                
                 
         
         regex11 = re.compile('[<>]')
@@ -360,8 +364,12 @@ def play_pooo():
         # Mise à jour de la Map :
         decrypt_state(Map,state)
         
+        '''for i in range(len(Map.cellAlly)):
+            poooc.order(setmove(userid,100,Map.cellAlly[i],Map.cellAlly[i].voisinsNeut[0]))'''
+        '''if Map.listCellules[0].nboff > Map.listCellules[1].nboff :
+            poooc.order(setmove(userid,100,Map.listCellules[0],Map.listCellules[1]))'''
         ####### IA ########
-        """ for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
+        for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
             prodmax = 0
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
@@ -369,11 +377,11 @@ def play_pooo():
                         prodmax = Map.cellAlly[i].voisinsNeut[j].prod                           
                         cible = Map.cellAlly[i].voisinsNeut[j]
             
-            if (cible.nboff + cible.ndbef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
-                mv = setmove(userid,100,Map.cellAlly[i],cible)
-                poooc.order(mv)"""
-        mv = setmove(userid,100,Map.listCellules[0],Map.listCellules[1])
-        poooc.order(mv)
+                if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                    mv = setmove(userid,100,Map.cellAlly[i],cible)
+                    poooc.order(mv)
+    
+        
         
         
         ####### FIN IA ########
@@ -390,17 +398,30 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 
 def main() :
     
-    init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
+    init_string = "INIT013fe2e8-86df-4fa3-960d-a0a537849a68TO2[1];2;7CELLS:0(0,0)'100'30'8'I,1(0,5)'100'30'8'I,2(5,0)'100'30'8'I,3(5,5)'200'30'8'II,4(5,10)'100'30'8'I,5(10,5)'100'30'8'I,6(10,10)'100'30'8'I;6LINES:0@4800OF1,0@4800OF2,2@4700OF3,3@4700OF4,4@4800OF6,5@4800OF6"
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
 
     state_str = "STATE92352897-2119-4c57-b26d-44ec48982006IS2;7CELLS:0[0]5'0,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]5'0;0MOVES"
-    decrypt_state(Map,state_str)
+    state_str2= "STATE9c3a9d60-adaa-46a7-af25-40c933ea3a1eIS2;7CELLS:0[0]1'2,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]1'2;2MOVES:0>6[0]@3665229582'1,4<6[1]@3665229576'6"
+    decrypt_state(Map,state_str2)
     
     uid = "blablacar"
     register_pooo(uid)
-    print(userid)
-    print(Map)
-    
+    '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
+        prodmax = 0
+        if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
+            for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
+                if Map.cellAlly[i].voisinsNeut[j].prod > prodmax :                          #Et on choisit celle qui a la production maximale (elle devient la cellule cible)
+                    
+                    prodmax = Map.cellAlly[i].voisinsNeut[j].prod                           
+                    cible = Map.cellAlly[i].voisinsNeut[j]
+                    
+                if (cible.nboff+cible.nbdef) > Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                    mv = setmove(userid,100,Map.cellAlly[i],cible)
+                    print(mv)
+                    poooc.order(str(mv))'''
+                    
+                   
     
 
     
