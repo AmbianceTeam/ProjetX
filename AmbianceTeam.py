@@ -245,7 +245,7 @@ def decrypt_state(graph,state_str):                                             
     res = regex3.findall(state_str)
     nb_cells = int(res[0][1:-5])
     
-    regex4 = re.compile('[0-9]+\[[0-9]+\][0-9]+\'[0-9]')                        #Récupération de des informations sur les cellulles sous forme de liste
+    regex4 = re.compile('[0-9]+\[-[0-9]+\][0-9]+\'[0-9]')                        #Récupération de des informations sur les cellulles sous forme de liste
     info_cells = regex4.findall(state_str)
     
     regex5 = re.compile('[0-9]+MOVES')                                          #Récupération du nombre de mouvements en cours
@@ -390,13 +390,10 @@ def main() :
     
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
-    """
-    #print(Map.listCellules[0].prod)
-    #print(Map.listLignes[1])
-    #print(Map.listCellules[2])
+
     state_str = "STATE20ac18ab-6d18-450e-94af-bee53fdc8fcaIS2;3CELLS:1[2]12'4,2[2]15'2,3[1]33'6;4MOVES:1<5[2]@232'>6[2]@488'>3[1]@4330'2,1<10[1]@2241'3"
     decrypt_state(Map,state_str)
-    """
+    
     uid = "blablacar"
     register_pooo(uid)
     print(userid)
