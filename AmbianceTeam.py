@@ -361,7 +361,7 @@ def play_pooo():
         decrypt_state(Map,state)
         
         ####### IA ########
-        for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
+        """ for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
             prodmax = 0
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
@@ -371,8 +371,9 @@ def play_pooo():
             
             if (cible.nboff + cible.ndbef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                 mv = setmove(userid,100,Map.cellAlly[i],cible)
-                poooc.order(mv)
-        
+                poooc.order(mv)"""
+        mv = setmove(userid,100,Map.listCellules[0],Map.listCellules[1])
+        poooc.order(mv)
         
         
         ####### FIN IA ########
