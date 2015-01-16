@@ -371,6 +371,7 @@ def play_pooo():
         ####### IA ########
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
             prodmax = 0
+            danger = 0
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
                     if Map.cellAlly[i].voisinsNeut[j].prod > prodmax :                          #Et on choisit celle qui a la production maximale (elle devient la cellule cible)
@@ -381,8 +382,18 @@ def play_pooo():
                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
-    
-        
+            if Map.cellAlly[i].voisinsEnem==[] and Map.cellAlly[i].voisinsNeut == [] and Map.cellAlly[i].voisinsAlly != [] :
+                for j in range(len(Map.cellAlly[i].voisinsAlly)):
+                    
+                    if Map.cellAlly[i].voisinsAlly[j].voisinsEnem != [] :
+                        danger = 1
+                        cible2 = Map.cellAlly[i].voisinsAlly[j]
+                    elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :
+                        cible2 = Map.cellAlly[i].voisinsAlly[j]
+                    else :
+                        cible2 = Map.cellAlly[i].voisinsAlly[0]
+                if Map.cellAlly[i].nboff >= 5 : 
+                    poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
         
         
         ####### FIN IA ########
