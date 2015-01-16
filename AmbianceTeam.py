@@ -359,7 +359,6 @@ def play_pooo():
         state = state_on_update()
         # Mise à jour de la Map :
         decrypt_state(Map,state)
-        listvoisinsneutre = []
         
         ####### IA ########
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
@@ -369,9 +368,10 @@ def play_pooo():
                     if Map.cellAlly[i].voisinsNeut[j].prod > prodmax :                          #Et on choisit celle qui a la production maximale (elle devient la cellule cible)
                         prodmax = Map.cellAlly[i].voisinsNeut[j].prod                           
                         cible = Map.cellAlly[i].voisinsNeut[j]
+            
             if (cible.nboff + cible.ndbef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                 mv = setmove(userid,100,Map.cellAlly[i],cible)
-                
+                order(mv)
         
         
         
