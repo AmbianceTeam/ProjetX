@@ -328,6 +328,7 @@ def play_pooo():
     
     # (1) récupère l'état initial 
     # init_state = state()
+    userid = 'Ambianceteam'
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3" # donné par le serveur , mais par quelle fonction ? 
     
     # (2) TODO: traitement de init_state
@@ -346,9 +347,12 @@ def play_pooo():
         
         ####### IA ########
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
+            prodmax = 0
             for j in range(len(Map.cellAlly[i].voisins)):                       # pour chaque cell alliée, on parcourt ses voisins
-                if Map.cellAlly[i].voisins[j].couleur == -1 :                   
-                    listvoisinsneutre.append(Map.cellAlly[i].voisins[j])        # Dès qu'on rencontre un voisin neutre on l'ajoute dans une liste
+                if Map.cellAlly[i].voisins[j][1].couleur == -1 :                   
+                    if Map.cellAlly[i].voisins[j][1].prod > prodmax :
+                        cible = Map.cellAlly[i].voisins[j][1]
+            setmove(userid,100,Map.cellAlly[i],cible)
         
         
         
@@ -360,7 +364,7 @@ def play_pooo():
     
 #Fonction permettant de créer le paramètre move pour la fonction order(move)
 def setmove(userid,pourcent,Cellfrom,Cellto):
-    res =  userid + 'MOV' + str((pourcent*Cellfrom.nboff)/100) + 'FROM' + str(Cellfrom.idcell) + 'TO' + str(Cellto.idcell)
+    res = '[' + userid + ']' + 'MOV' + str(pourcent) + 'FROM' + str(Cellfrom.idcell) + 'TO' + str(Cellto.idcell)
     return res
 
 
@@ -372,6 +376,7 @@ def main() :
     #print(Map.listCellules[2])
     state_str = "STATE20ac18ab-6d18-450e-94af-bee53fdc8fcaIS2;3CELLS:1[2]12'4,2[2]15'2,3[1]33'6;4MOVES:1<5[2]@232'>6[2]@488'>3[1]@4330'2,1<10[1]@2241'3"
     decrypt_state(Map,state_str)
+    print(setmove('caca',33,Map.listCellules[1],Map.listCellules[2]))
 
     
 if __name__ == '__main__':
