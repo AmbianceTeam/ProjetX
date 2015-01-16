@@ -238,9 +238,9 @@ def decrypt_state(graph,state_str):                                             
     res = regex1.findall(state_str)                                             
     match_id = res[0][5:-2]"""
     
-    regex2 = re.compile('IS[0-9]+')                                             #Récupération du nombre de joueurs
+    """regex2 = re.compile('IS[0-9]+')                                             #Récupération du nombre de joueurs
     res = regex2.findall(state_str)
-    nb_players = int(res[0][2::])
+    nb_players = int(res[0][2::])"""
     
     regex3 = re.compile(';[0-9]+CELLS')                                         #Récupération du nombre de cellules
     res = regex3.findall(state_str)
