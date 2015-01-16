@@ -11,7 +11,7 @@ class Cellule:
     
     
     # Fonction d'initialisation
-    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=-1): #-1 pour le neutre
+    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=-1,voisinsAlly = [], voisinsEnem = [], voisinsNeut = []): #-1 pour le neutre
         
         self.idcell = idcell                      # Initialisation de l'id de la cellule Type : entier
         self.offsize = offsize                    # Initialisation de la capacité offensive de la cellule Type : entier
@@ -24,7 +24,9 @@ class Cellule:
         self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule. Type : entier
         self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un. Type : entier
         self.voisins = []                         # Initialisation du tableau contenant les voisins de la cellule. Type : tuple (objet Ligne,objet Cellule correspondant)
-    
+        self.voisinsAlly = voisinsAlly
+        self.voisinsEnem = voisinsEnem
+        self.voisinsNeut = voisinsNeut
 
         
     
@@ -226,7 +228,9 @@ def init_pooo(init_str):
 
 def decrypt_state(graph,state_str):                                                       #Fonction de traitement de state
     
-
+    graph.cellAlly = []                                                         # Réinit des listes de cellules (alliées, ennemies et neutres)
+    graph.cellEnem = []
+    graph.cellNeut = []
 
     
     regex1 = re.compile('STATE[A-Za-z0-9-]+IS')                                 #Recupération de l'id du match
@@ -252,19 +256,18 @@ def decrypt_state(graph,state_str):                                             
     info_moves = regex6.findall(state_str)                                      #Liste avec (infos de déplacement entre 2 cellules + truc qui sert à rien mais je vois pas comment faire autrement)
 
     
-    print(info_moves)    
 
     
     for i in range(nb_cells):                                                   #Recupération des infos sur les cellules (boucle qui parcourt chaque objet cellule pour actualiser les infos)
         
-        graph.cellAlly = []                                                     # Réinit des listes de cellules (alliées, ennemies et neutres)
-        graph.cellEnem = []
-        graph.cellNeut = []
+        graph.listCellules[i].voisinsAlly = []
+        graph.listCellules[i].voisinsEnem = []
+        graph.listCellules[i].voisinsNeut = []
         
         regex8 = re.compile('\[[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
         color = res[0][1:-1]
-        graph.listCellules[i].etat = res[0][1:-1]
+        graph.listCellules[i].couleur = int(res[0][1:-1])
         
         if color == graph.listInfoTerrain[2] :                                  # Ajout des cellules alliées, ennemies ou neutres dans leur liste repective
             graph.cellAlly.append(graph.listCellules[i])
@@ -280,6 +283,21 @@ def decrypt_state(graph,state_str):                                             
         regex10 = re.compile('\'[0-9]+')                                        #MàJ du nombre d'unités défensives actuel de la cellule
         res = regex10.findall(info_cells[i])
         graph.listCellules[i].nbdef = res[0][1::]
+        
+    for i in range(nb_cells):
+        for j in range(len(graph.listCellules[i].voisins)):                     # Ajout des voisins de la cellule dans des listes en fonction de leur statut (Neutre, allié ou ennemi)
+            
+            #print(graph.listCellules[i].voisins[j][1].couleur)
+            
+            if graph.listCellules[i].voisins[j][1].couleur == -1 :
+                
+                graph.listCellules[i].voisinsNeut.append(graph.listCellules[i].voisins[j][1])
+                
+            if graph.listCellules[i].voisins[j][1].couleur == graph.listInfoTerrain[2] :
+                graph.listCellules[i].voisinsAlly.append(graph.listCellules[i].voisins[j][1])
+                
+            else :
+                graph.listCellules[i].voisinsEnem.append(graph.listCellules[i].voisins[j][1])       
         
     for i in range(len(info_moves)):                                            # Récupération des infos sur les mouvements des unités
         
@@ -349,10 +367,11 @@ def play_pooo():
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
             prodmax = 0
             for j in range(len(Map.cellAlly[i].voisins)):                       # pour chaque cell alliée, on parcourt ses voisins
-                if Map.cellAlly[i].voisins[j][1].couleur == -1 :                   
-                    if Map.cellAlly[i].voisins[j][1].prod > prodmax :
+                if Map.cellAlly[i].voisins[j][1].couleur == -1 :                # Dès qu'on trouve un voisin neutre   
+                    if Map.cellAlly[i].voisins[j][1].prod > prodmax :           # On choisit le voisin neutre possédant la meilleure cadence de prod
                         cible = Map.cellAlly[i].voisins[j][1]
-            setmove(userid,100,Map.cellAlly[i],cible)
+            if cible.nboff + cible.nbdef < Map.cellAlly[i].nboff :              # Si on a suffisamment d'unités pour la prendre, on la prend
+                setmove(userid,100,Map.cellAlly[i],cible)
         
         
         
@@ -371,12 +390,17 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 def main() :
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
     Map = init_pooo(init_string) # Instanciation de la Map (objet Graphe)
-    print(Map.listCellules[0].prod)
+    #print(Map.listCellules[0].prod)
     #print(Map.listLignes[1])
     #print(Map.listCellules[2])
     state_str = "STATE20ac18ab-6d18-450e-94af-bee53fdc8fcaIS2;3CELLS:1[2]12'4,2[2]15'2,3[1]33'6;4MOVES:1<5[2]@232'>6[2]@488'>3[1]@4330'2,1<10[1]@2241'3"
     decrypt_state(Map,state_str)
-    print(setmove('caca',33,Map.listCellules[1],Map.listCellules[2]))
+    
+
+    
+    print(Map.listCellules[0].voisinsAlly)
+    print(Map.listCellules[0].voisinsNeut)
+    
 
     
 if __name__ == '__main__':
