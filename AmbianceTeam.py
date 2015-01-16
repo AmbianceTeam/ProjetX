@@ -268,10 +268,6 @@ def decrypt_state(graph,state_str):                                             
         
         regex8 = re.compile('\[\-?[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
-<<<<<<< HEAD
-=======
-        
->>>>>>> 48a13e11a60e92964832134b2dd4984eb2343f56
         color = int(res[0][1:-1])
         graph.listCellules[i].couleur = int(res[0][1:-1])
         
@@ -381,16 +377,11 @@ def play_pooo():
                         prodmax = Map.cellAlly[i].voisinsNeut[j].prod                           
                         cible = Map.cellAlly[i].voisinsNeut[j]
             
-<<<<<<< HEAD
+
                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
     
-=======
-            if (cible.nboff + cible.ndbef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
-                mv = setmove(userid,100,Map.cellAlly[i],cible)
-                poooc.order(mv)
->>>>>>> 48a13e11a60e92964832134b2dd4984eb2343f56
         
         
         
