@@ -278,16 +278,14 @@ def decrypt_state(graph,state_str):                                             
             
         regex9 = re.compile('[0-9]+\'')                                         #MàJ du nombre d'unités offensives actuel de la cellule
         res = regex9.findall(info_cells[i])
-        graph.listCellules[i].nboff = res[0][0:-1]
+        graph.listCellules[i].nboff = int(res[0][0:-1])
         
         regex10 = re.compile('\'[0-9]+')                                        #MàJ du nombre d'unités défensives actuel de la cellule
         res = regex10.findall(info_cells[i])
-        graph.listCellules[i].nbdef = res[0][1::]
+        graph.listCellules[i].nbdef = int(res[0][1::])
         
     for i in range(nb_cells):
         for j in range(len(graph.listCellules[i].voisins)):                     # Ajout des voisins de la cellule dans des listes en fonction de leur statut (Neutre, allié ou ennemi)
-            
-            #print(graph.listCellules[i].voisins[j][1].couleur)
             
             if graph.listCellules[i].voisins[j][1].couleur == -1 :
                 
@@ -366,12 +364,13 @@ def play_pooo():
         ####### IA ########
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
             prodmax = 0
-            for j in range(len(Map.cellAlly[i].voisins)):                       # pour chaque cell alliée, on parcourt ses voisins
-                if Map.cellAlly[i].voisins[j][1].couleur == -1 :                # Dès qu'on trouve un voisin neutre   
-                    if Map.cellAlly[i].voisins[j][1].prod > prodmax :           # On choisit le voisin neutre possédant la meilleure cadence de prod
-                        cible = Map.cellAlly[i].voisins[j][1]
-            if cible.nboff + cible.nbdef < Map.cellAlly[i].nboff :              # Si on a suffisamment d'unités pour la prendre, on la prend
-                setmove(userid,100,Map.cellAlly[i],cible)
+            if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :
+                for j in range(len(Map.cellAlly[i].voisinsNeut)) :
+                    if Map.cellAlly[i].voisinsNeut[j].prod > prodmax :
+                        cible = Map.cellAlly[i].voisinsNeut[j]
+            if (cible.nboff + cible.ndbef) < Map.cellAlly[i].nboff :  
+                mv = setmove(userid,100,Map.cellAlly[i],cible)
+                
         
         
         
@@ -396,10 +395,6 @@ def main() :
     state_str = "STATE20ac18ab-6d18-450e-94af-bee53fdc8fcaIS2;3CELLS:1[2]12'4,2[2]15'2,3[1]33'6;4MOVES:1<5[2]@232'>6[2]@488'>3[1]@4330'2,1<10[1]@2241'3"
     decrypt_state(Map,state_str)
     
-
-    
-    print(Map.listCellules[0].voisinsAlly)
-    print(Map.listCellules[0].voisinsNeut)
     
 
     
