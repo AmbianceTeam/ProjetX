@@ -367,6 +367,7 @@ def play_pooo():
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :
                     if Map.cellAlly[i].voisinsNeut[j].prod > prodmax :
+                        prodmax = Map.cellAlly[i].voisinsNeut[j].prod
                         cible = Map.cellAlly[i].voisinsNeut[j]
             if (cible.nboff + cible.ndbef) < Map.cellAlly[i].nboff :  
                 mv = setmove(userid,100,Map.cellAlly[i],cible)
