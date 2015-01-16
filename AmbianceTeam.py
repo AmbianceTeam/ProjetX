@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-import poooc
 from poooc import order, state, state_on_update, etime
 
 
@@ -88,7 +87,8 @@ def register_pooo(uid):
         "0947e717-02a1-4d83-9470-a941b6e8ed07"
 
     """
-    pass
+    global userid
+    userid = "REG"+uid
 
 
 def init_pooo(init_str):
@@ -220,8 +220,8 @@ def init_pooo(init_str):
         
         
         
-    
-    return Graphe(listCellules,listLignes,listInfoTerrain)
+    global Map
+    Map=Graphe(listCellules,listLignes,listInfoTerrain)
 
 
 
@@ -344,11 +344,10 @@ def play_pooo():
     
     # (1) récupère l'état initial 
     # init_state = state()
-    userid = 'Ambianceteam'
-    init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3" # donné par le serveur , mais par quelle fonction ? 
+    #userid = 'Ambianceteam'
+    #init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3" # donné par le serveur , mais par quelle fonction ? 
     
-    # (2) TODO: traitement de init_state
-    Map = init_pooo(init_string)                                                # On initialise Map qui est un objet de type Graphe 
+    # (2) TODO: traitement de init_state                                              # On initialise Map qui est un objet de type Graphe 
     init_state = state()
     decrypt_state(Map,init_state)                                               # Initialisation des informations de state
 
@@ -388,13 +387,20 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 
 
 def main() :
+    
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
-    Map = init_pooo(init_string) # Instanciation de la Map (objet Graphe)
+    init_pooo(init_string) # Instanciation de la Map (objet Graphe)
+    """
     #print(Map.listCellules[0].prod)
     #print(Map.listLignes[1])
     #print(Map.listCellules[2])
     state_str = "STATE20ac18ab-6d18-450e-94af-bee53fdc8fcaIS2;3CELLS:1[2]12'4,2[2]15'2,3[1]33'6;4MOVES:1<5[2]@232'>6[2]@488'>3[1]@4330'2,1<10[1]@2241'3"
     decrypt_state(Map,state_str)
+    """
+    uid = "blablacar"
+    register_pooo(uid)
+    print(userid)
+    print(Map)
     
     
 
