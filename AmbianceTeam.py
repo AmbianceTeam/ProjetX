@@ -234,9 +234,9 @@ def decrypt_state(graph,state_str):                                             
     graph.cellNeut = []
 
     
-    regex1 = re.compile('STATE[A-Za-z0-9-]+IS')                                 #Recupération de l'id du match
+    """regex1 = re.compile('STATE[A-Za-z0-9-]+IS')                                 #Recupération de l'id du match
     res = regex1.findall(state_str)                                             
-    match_id = res[0][5:-2]
+    match_id = res[0][5:-2]"""
     
     regex2 = re.compile('IS[0-9]+')                                             #Récupération du nombre de joueurs
     res = regex2.findall(state_str)
