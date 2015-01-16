@@ -89,7 +89,7 @@ def register_pooo(uid):
 
     """
     global userid
-    userid = "REG"+uid
+    userid = uid
 
 
 def init_pooo(init_str):
@@ -267,7 +267,7 @@ def decrypt_state(graph,state_str):                                             
         regex8 = re.compile('\[\-?[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
         
-        color = res[0][1:-1]
+        color = int(res[0][1:-1])
         graph.listCellules[i].couleur = int(res[0][1:-1])
         
         if color == graph.listInfoTerrain[2] :                                  # Ajout des cellules alliées, ennemies ou neutres dans leur liste repective
@@ -361,7 +361,7 @@ def play_pooo():
         decrypt_state(Map,state)
         
         ####### IA ########
-        """ for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
+        for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
             prodmax = 0
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
@@ -371,9 +371,8 @@ def play_pooo():
             
             if (cible.nboff + cible.ndbef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                 mv = setmove(userid,100,Map.cellAlly[i],cible)
-                poooc.order(mv)"""
-        mv = setmove(userid,100,Map.listCellules[0],Map.listCellules[1])
-        poooc.order(mv)
+                poooc.order(mv)
+        
         
         
         ####### FIN IA ########
@@ -388,9 +387,9 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
     return res
 
 
-"""def main() :
+def main() :
     
-    init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
+    init_string = "INIT013fe2e8-86df-4fa3-960d-a0a537849a68TO2[1];2;7CELLS:0(0,0)'100'30'8'I,1(0,5)'100'30'8'I,2(5,0)'100'30'8'I,3(5,5)'200'30'8'II,4(5,10)'100'30'8'I,5(10,5)'100'30'8'I,6(10,10)'100'30'8'I;6LINES:0@4800OF1,0@4800OF2,2@4700OF3,3@4700OF4,4@4800OF6,5@4800OF6"
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
 
     state_str = "STATE92352897-2119-4c57-b26d-44ec48982006IS2;7CELLS:0[0]5'0,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]5'0;0MOVES"
@@ -405,4 +404,4 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 
     
 if __name__ == '__main__':
-    main()"""
+    main()
