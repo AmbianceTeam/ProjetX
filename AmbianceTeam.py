@@ -246,7 +246,7 @@ def decrypt_state(graph,state_str):                                             
     res = regex3.findall(state_str)
     nb_cells = int(res[0][1:-5])
     
-    regex4 = re.compile('[0-9]+\[-[0-9]+\][0-9]+\'[0-9]')                        #Récupération de des informations sur les cellulles sous forme de liste
+    regex4 = re.compile('[0-9]+\[\-?[0-9]+\][0-9]+\'[0-9]')                        #Récupération de des informations sur les cellulles sous forme de liste
     info_cells = regex4.findall(state_str)
     
     regex5 = re.compile('[0-9]+MOVES')                                          #Récupération du nombre de mouvements en cours
@@ -257,16 +257,16 @@ def decrypt_state(graph,state_str):                                             
     info_moves = regex6.findall(state_str)                                      #Liste avec (infos de déplacement entre 2 cellules + truc qui sert à rien mais je vois pas comment faire autrement)
 
     
-
-    
+   
     for i in range(nb_cells):                                                   #Recupération des infos sur les cellules (boucle qui parcourt chaque objet cellule pour actualiser les infos)
         
         graph.listCellules[i].voisinsAlly = []
         graph.listCellules[i].voisinsEnem = []
         graph.listCellules[i].voisinsNeut = []
         
-        regex8 = re.compile('\[-[0-9]+\]')                                       #MàJ de la couleur de la cellule
+        regex8 = re.compile('\[\-?[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
+        
         color = res[0][1:-1]
         graph.listCellules[i].couleur = int(res[0][1:-1])
         
@@ -392,7 +392,7 @@ def main() :
     init_string = "INIT20ac18ab-6d18-450e-94af-bee53fdc8fcaTO6[2];1;3CELLS:1(23,9)'2'30'8'I,2(41,55)'1'30'8'II,3(23,103)'1'20'5'I;2LINES:1@3433OF2,1@6502OF3"
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
 
-    state_str = "STATE20ac18ab-6d18-450e-94af-bee53fdc8fcaIS2;3CELLS:1[2]12'4,2[2]15'2,3[1]33'6;4MOVES:1<5[2]@232'>6[2]@488'>3[1]@4330'2,1<10[1]@2241'3"
+    state_str = "STATE92352897-2119-4c57-b26d-44ec48982006IS2;7CELLS:0[0]5'0,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]5'0;0MOVES"
     decrypt_state(Map,state_str)
     
     uid = "blablacar"
