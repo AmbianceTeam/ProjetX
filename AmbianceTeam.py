@@ -238,9 +238,9 @@ def decrypt_state(graph,state_str):                                             
     res = regex1.findall(state_str)                                             
     match_id = res[0][5:-2]"""
     
-    regex2 = re.compile('IS[0-9]+')                                             #Récupération du nombre de joueurs
+    """regex2 = re.compile('IS[0-9]+')                                             #Récupération du nombre de joueurs
     res = regex2.findall(state_str)
-    nb_players = int(res[0][2::])
+    nb_players = int(res[0][2::])"""
     
     regex3 = re.compile(';[0-9]+CELLS')                                         #Récupération du nombre de cellules
     res = regex3.findall(state_str)
@@ -268,6 +268,10 @@ def decrypt_state(graph,state_str):                                             
         
         regex8 = re.compile('\[\-?[0-9]+\]')                                       #MàJ de la couleur de la cellule
         res = regex8.findall(info_cells[i])
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 48a13e11a60e92964832134b2dd4984eb2343f56
         color = int(res[0][1:-1])
         graph.listCellules[i].couleur = int(res[0][1:-1])
         
@@ -377,10 +381,16 @@ def play_pooo():
                         prodmax = Map.cellAlly[i].voisinsNeut[j].prod                           
                         cible = Map.cellAlly[i].voisinsNeut[j]
             
+<<<<<<< HEAD
                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
     
+=======
+            if (cible.nboff + cible.ndbef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                mv = setmove(userid,100,Map.cellAlly[i],cible)
+                poooc.order(mv)
+>>>>>>> 48a13e11a60e92964832134b2dd4984eb2343f56
         
         
         
