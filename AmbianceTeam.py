@@ -228,7 +228,7 @@ def init_pooo(init_str):
 
 def ligne(graph,cell1,cell2):                                                   #Fonction qui prend en paramètre l'objet Graphe, l'ID de la cellule 1 et l'ID de la cellule 2 et qui renvoie un objet Ligne correspondant
     for i in range(len(graph.listCellules[cell1].voisins)):                     #On recherche dans les voisins de la cellule 1, la cellule qui a l'ID de la cellule2
-        print(graph.listCellules[cell1].voisins[i][1].idcell)
+        
         if graph.listCellules[cell1].voisins[i][1].idcell == cell2 :
             line = graph.listCellules[cell1].voisins[i][0]
             return line
@@ -434,7 +434,7 @@ def main() :
     register_pooo(uid)
     
     
-    print(ligne(Map,Map.listCellules[2].idcell,Map.listCellules[3].idcell).idline)
+    
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
         if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
