@@ -419,9 +419,15 @@ def play_pooo():
                  bestRatio = (Map.cellAlly[i].voisinsEnem[0].nbdef + Map.cellAlly[i].voisinsEnem[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[0].idcell).dist)/Map.cellAlly[i].voisinsEnem[0].prod
                  for j in range(len(Map.cellAlly[i].voisinsEnem)) :
                      ratioCourant = (Map.cellAlly[i].voisinsEnem[j].nbdef + Map.cellAlly[i].voisinsEnem[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[j].idcell).dist)/Map.cellAlly[i].voisinsEnem[j].prod
-                     if (ratioCourant < bestRatio) and (Map.cellAlly[i].voisinsEnem[j].nbdef + Map.cellAlly[i].voisinsEnem[j].nboff < Map.cellAlly[i].nboff) :           #Ne prend pas en compte les unités ennemies présentent sur la ligne (à corriger donc) + les unités que l'ennemi aura produit le temps du déplacement des unités alliées 
+                     if (ratioCourant < bestRatio) :           #Ne prend pas en compte les unités ennemies présentent sur la ligne (à corriger donc) + les unités que l'ennemi aura produit le temps du déplacement des unités alliées 
                         bestRatio = ratioCourant                           
-                        cible = Map.cellAlly[i].voisinsEnem[j]    
+                        cible = Map.cellAlly[i].voisinsEnem[j]
+                        
+                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                    mv = setmove(userid,100,Map.cellAlly[i],cible)
+                    poooc.order(mv)
+                    
+                    
         ####### FIN IA ########
         
     
