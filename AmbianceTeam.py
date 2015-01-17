@@ -203,7 +203,7 @@ def init_pooo(init_str):
         
         regex16 = re.compile('@[0-9]+OF') # Recuperation de la distance entre les deux cellules (en ms)
         dist = regex16.findall(lignes_init[j])
-        dist = dist[0][1:-2]
+        dist = int(dist[0][1:-2])
         
         regex17 = re.compile('OF[0-9]+') # Recuperation de l'ID de la 2eme cellule qui forme la ligne 
         idcell2 = regex17.findall(lignes_init[j])
