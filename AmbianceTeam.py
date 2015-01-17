@@ -414,13 +414,21 @@ def play_pooo():
                 if Map.cellAlly[i].nboff >= 5 :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
         
-        
+            if Map.cellAlly[i].voisinsEnem != [] :
+                 cible = Map.cellAlly[i].voisinsEnem[0]
+                 bestRatio = (Map.cellAlly[i].voisinsEnem[0].nbdef + Map.cellAlly[i].voisinsEnem[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[0].idcell).dist)/Map.cellAlly[i].voisinsEnem[0].prod
+                 for j in range(len(Map.cellAlly[i].voisinsEnem)) :
+                     ratioCourant = (Map.cellAlly[i].voisinsEnem[j].nbdef + Map.cellAlly[i].voisinsEnem[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[j].idcell).dist)/Map.cellAlly[i].voisinsEnem[j].prod
+                     if (ratioCourant < bestRatio) and (Map.cellAlly[i].voisinsEnem[j].nbdef + Map.cellAlly[i].voisinsEnem[j].nboff < Map.cellAlly[i].nboff) :           #Ne prend pas en compte les unités ennemies présentent sur la ligne (à corriger donc) + les unités que l'ennemi aura produit le temps du déplacement des unités alliées 
+                        bestRatio = ratioCourant                           
+                        cible = Map.cellAlly[i].voisinsEnem[j]    
         ####### FIN IA ########
+        
     
     
     
     
-    
+        
 #Fonction permettant de créer le paramètre move pour la fonction order(move)
 def setmove(userid,pourcent,Cellfrom,Cellto):
     res = '[' + userid + ']' + 'MOV' + str(pourcent) + 'FROM' + str(Cellfrom.idcell) + 'TO' + str(Cellto.idcell)
