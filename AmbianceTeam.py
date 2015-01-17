@@ -227,6 +227,7 @@ def init_pooo(init_str):
 
 
 def ligne(graph,cell1,cell2):                                                   #Fonction qui prend en paramètre l'objet Graphe, l'ID de la cellule 1 et l'ID de la cellule 2 et qui renvoie un objet Ligne correspondant
+   
     for i in range(len(graph.listCellules[cell1].voisins)):                     #On recherche dans les voisins de la cellule 1, la cellule qui a l'ID de la cellule2
         
         if graph.listCellules[cell1].voisins[i][1].idcell == cell2 :
@@ -383,7 +384,7 @@ def play_pooo():
             danger = 0
             ratioCourant = 0
             cible = Map.cellAlly[i].voisinsNeut[0]
-            bestRatio = (Map.cellAlly[i].voisinsNeut[0].nbdef + Map.cellAlly[i].voisinsNeut[0].nboff + ligne(Map,Map.cellAlly[i], Map.cellAlly[i].voisinsNeut[0]).dist)/Map.cellAlly[i].voisinsNeut[0].prod
+            bestRatio = (Map.cellAlly[i].voisinsNeut[0].nbdef + Map.cellAlly[i].voisinsNeut[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[0].idcell).dist)/Map.cellAlly[i].voisinsNeut[0].prod
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
                     ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i], Map.cellAlly[i].voisinsNeut[j]).dist)/Map.cellAlly[i].voisinsNeut[j].prod
