@@ -382,6 +382,7 @@ def play_pooo():
             prodmax = 0
             danger = 0
             ratioCourant = 0
+            cible = Map.cellAlly[i].voisinsNeut[0]
             bestRatio = (Map.cellAlly[i].voisinsNeut[0].nbdef + Map.cellAlly[i].voisinsNeut[0].nboff + ligne(Map,Map.cellAlly[i], Map.cellAlly[i].voisinsNeut[0]).dist)/Map.cellAlly[i].voisinsNeut[0].prod
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
