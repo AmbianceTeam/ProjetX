@@ -226,6 +226,15 @@ def init_pooo(init_str):
 
 
 
+def ligne(graph,cell1,cell2):                                                   #Fonction qui prend en paramètre l'objet Graphe, l'ID de la cellule 1 et l'ID de la cellule 2 et qui renvoie un objet Ligne correspondant
+    for i in range(len(graph.listCellules[cell1].voisins)):                     #On recherche dans les voisins de la cellule 1, la cellule qui a l'ID de la cellule2
+        print(graph.listCellules[cell1].voisins[i][1].idcell)
+        if graph.listCellules[cell1].voisins[i][1].idcell == cell2 :
+            line = graph.listCellules[cell1].voisins[i][0]
+            return line
+    
+
+
 
 def decrypt_state(graph,state_str):                                                       #Fonction de traitement de state
     
@@ -382,17 +391,21 @@ def play_pooo():
                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
-            if Map.cellAlly[i].voisinsEnem==[] and Map.cellAlly[i].voisinsNeut == [] and Map.cellAlly[i].voisinsAlly != [] :
-                for j in range(len(Map.cellAlly[i].voisinsAlly)):
                     
-                    if Map.cellAlly[i].voisinsAlly[j].voisinsEnem != [] :
+                    
+                    
+            if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut == [] and Map.cellAlly[i].voisinsAlly != [] :    #Si la cellule courante est entourés d'alliés
+                for j in range(len(Map.cellAlly[i].voisinsAlly)):                                                               #On parcourt la liste des voisins de cette cellules
+                    
+                    if Map.cellAlly[i].voisinsAlly[j].voisinsEnem != [] :                                                       #Si une des cellules voisines est proche d'un ennemi, on lui enverra les unités en priorité (d'où le danger = 1)
                         danger = 1
-                        cible2 = Map.cellAlly[i].voisinsAlly[j]
-                    elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :
-                        cible2 = Map.cellAlly[i].voisinsAlly[j]
-                    else :
+                        cible2 = Map.cellAlly[i].voisinsAlly[j] 
+                    elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :                                     #Si il n'y a pas de danger et qu'une cellule voisine a une cellule neutre à portée, on lui envoie les units
+                        cible2 = Map.cellAlly[i].voisinsAlly[j]     
+                    else :                                                                                                      #Sinon on envoie à la premiere cellule voisine rencontrée (possibilité d'améliorer bien sur ;))
                         cible2 = Map.cellAlly[i].voisinsAlly[0]
-                if Map.cellAlly[i].nboff >= 5 : 
+                        
+                if Map.cellAlly[i].nboff >= 5 :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
         
         
@@ -419,6 +432,9 @@ def main() :
     
     uid = "blablacar"
     register_pooo(uid)
+    
+    
+    print(ligne(Map,Map.listCellules[2].idcell,Map.listCellules[3].idcell).idline)
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
         if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
