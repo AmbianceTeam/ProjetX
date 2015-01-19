@@ -383,6 +383,7 @@ def play_pooo():
             prodmax = 0
             danger = 0
             ratioCourant = 0
+            logging.info('ratioCourant______________________________: {}'.format(ratioCourant))
             
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 cible = Map.cellAlly[i].voisinsNeut[0]
@@ -390,7 +391,8 @@ def play_pooo():
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
                     ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod
                     if ratioCourant < bestRatio :                                               #Et on choisit celle qui a le plus petit ratio (cellule la plus rentable) et elle devient la cible
-                        bestRatio = ratioCourant                           
+                        bestRatio = ratioCourant  
+                        logging.info('bestRatio: {}'.format(bestRatio))
                         cible = Map.cellAlly[i].voisinsNeut[j]
             
 
@@ -421,6 +423,7 @@ def play_pooo():
                      ratioCourant = (Map.cellAlly[i].voisinsEnem[j].nbdef + Map.cellAlly[i].voisinsEnem[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[j].idcell).dist)/Map.cellAlly[i].voisinsEnem[j].prod
                      if (ratioCourant < bestRatio) :           #Ne prend pas en compte les unités ennemies présentent sur la ligne (à corriger donc) + les unités que l'ennemi aura produit le temps du déplacement des unités alliées 
                         bestRatio = ratioCourant                           
+                        logging.info('bestRatio: {}'.format(bestRatio))
                         cible = Map.cellAlly[i].voisinsEnem[j]
                         
                  if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
