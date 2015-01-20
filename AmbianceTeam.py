@@ -417,16 +417,16 @@ def play_pooo():
         
             if Map.cellAlly[i].voisinsEnem != [] :
                 logging.info('Une cellule Ally a un ennemi')
-                 cible = Map.cellAlly[i].voisinsEnem[0]
-                 bestRatio = (Map.cellAlly[i].voisinsEnem[0].nbdef + Map.cellAlly[i].voisinsEnem[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[0].idcell).dist)/Map.cellAlly[i].voisinsEnem[0].prod
-                 for j in range(len(Map.cellAlly[i].voisinsEnem)) :
-                     ratioCourant = (Map.cellAlly[i].voisinsEnem[j].nbdef + Map.cellAlly[i].voisinsEnem[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[j].idcell).dist)/Map.cellAlly[i].voisinsEnem[j].prod
-                     if (ratioCourant < bestRatio) :           #Ne prend pas en compte les unités ennemies présentent sur la ligne (à corriger donc) + les unités que l'ennemi aura produit le temps du déplacement des unités alliées 
+                cible = Map.cellAlly[i].voisinsEnem[0]
+                bestRatio = (Map.cellAlly[i].voisinsEnem[0].nbdef + Map.cellAlly[i].voisinsEnem[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[0].idcell).dist)/Map.cellAlly[i].voisinsEnem[0].prod
+                for j in range(len(Map.cellAlly[i].voisinsEnem)) :
+                    ratioCourant = (Map.cellAlly[i].voisinsEnem[j].nbdef + Map.cellAlly[i].voisinsEnem[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[j].idcell).dist)/Map.cellAlly[i].voisinsEnem[j].prod
+                    if (ratioCourant < bestRatio) :           #Ne prend pas en compte les unités ennemies présentent sur la ligne (à corriger donc) + les unités que l'ennemi aura produit le temps du déplacement des unités alliées 
                         bestRatio = ratioCourant                           
                         logging.info('bestRatio: {}'.format(bestRatio))
                         cible = Map.cellAlly[i].voisinsEnem[j]
                         
-                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
                     
