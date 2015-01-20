@@ -383,7 +383,7 @@ def play_pooo():
             prodmax = 0
             danger = 0
             ratioCourant = 0
-            logging.info('ratioCourant______________________________: {}'.format(ratioCourant))
+            #logging.info('ratioCourant______________________________: {}'.format(ratioCourant))
             
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 cible = Map.cellAlly[i].voisinsNeut[0]
@@ -392,7 +392,6 @@ def play_pooo():
                     ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod
                     if ratioCourant < bestRatio :                                               #Et on choisit celle qui a le plus petit ratio (cellule la plus rentable) et elle devient la cible
                         bestRatio = ratioCourant  
-                        logging.info('bestRatio: {}'.format(bestRatio))
                         cible = Map.cellAlly[i].voisinsNeut[j]
             
 
@@ -417,6 +416,7 @@ def play_pooo():
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
         
             if Map.cellAlly[i].voisinsEnem != [] :
+                logging.info('Une cellule Ally a un ennemi')
                  cible = Map.cellAlly[i].voisinsEnem[0]
                  bestRatio = (Map.cellAlly[i].voisinsEnem[0].nbdef + Map.cellAlly[i].voisinsEnem[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[0].idcell).dist)/Map.cellAlly[i].voisinsEnem[0].prod
                  for j in range(len(Map.cellAlly[i].voisinsEnem)) :
