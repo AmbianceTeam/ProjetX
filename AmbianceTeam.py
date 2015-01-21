@@ -2,8 +2,41 @@
 import re
 #from poooc import order, state, state_on_update, etime
 import poooc
+import tkinter 
+from interface_graphique import dessiner_terrain
+import threading
 
 
+class GUIThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        #ici ça ne marchera pas self.window=GUIInterface()
+ 
+ 
+    def run(self):
+        #là ça marche
+        self.window=GUIInterface()
+        self.window.mainloop()
+ 
+    def stop(self):
+        self.window.destroy()
+ 
+ 
+class GUIInterface(tkinter.Tk):
+    def __init__(self):
+        tkinter.Tk.__init__(self)
+        self.title("Interface Graphique AmbianceTeam")
+ 
+        self.canvas = tkinter.Canvas(self , width=1000, height =500) # Création d'un Canvas à partir de la fenetre "window"
+        self.canvas.pack()
+ 
+    def exit(self):
+        self.destroy()
+
+
+
+global newGUIThread; newGUIThread = GUIThread()
+newGUIThread.start()
 
 
 # Définition de la classe Cellule
@@ -218,11 +251,28 @@ def init_pooo(init_str):
 
         #print("idcell1 : " + str(idcell1) + " ; idcell2 : " + str(idcell2))
     
-        
-        
+
         
     global Map
     Map=Graphe(listCellules,listLignes,listInfoTerrain)
+
+    ############Dessin du terrain######################
+    
+    """#window creation
+    window = Tk() # Création de l'objet window (fenetre)
+    #canvas creation
+    w = Canvas(window , width=1000, height =500) # Création d'un Canvas à partir de la fenetre "window"
+    w. pack ()"""
+    
+    
+
+    #dessiner_terrain(GUIInterface().canvas,Map)
+
+
+    ############FIN Dessin du terrain######################
+
+
+
 
 
 
@@ -367,12 +417,15 @@ def play_pooo():
     decrypt_state(Map,init_state)                                               # Initialisation des informations de state
 
     maCouleur = Map.listInfoTerrain[2]                                          # On récupère notre couleur 
-    
+
+
     
     while True:
+
         state = poooc.state_on_update()
         # Mise à jour de la Map :
         decrypt_state(Map,state)
+        dessiner_terrain(newGUIThread.window.canvas,Map)
         
         '''for i in range(len(Map.cellAlly)):
             poooc.order(setmove(userid,100,Map.cellAlly[i],Map.cellAlly[i].voisinsNeut[0]))'''
