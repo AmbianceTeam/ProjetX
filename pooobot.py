@@ -20,9 +20,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 parser = argparse.ArgumentParser(description='Client for Pooo game', epilog='Example: $pooobot.py -h 192.168.10.4:9876 -b lollipooo Alice')
-parser.add_argument('-s','--server', required=True, help='address formatted as host:port of the Pooo server')
-parser.add_argument('-b','--bot', required=True, help='module name of the bot')
-parser.add_argument('player', help='name of the player')
+parser.add_argument('-s','--server', default="localhost:9876", help='address formatted as host:port of the Pooo server')
+parser.add_argument('-b','--bot', default="AmbianceTeam", help='module name of the bot')
+parser.add_argument('-player', default="Elou", help='name of the player')
 
 # args.server et args.player
 args = parser.parse_args()
@@ -30,6 +30,9 @@ args = parser.parse_args()
 # cherche le bot dans un sous-répertoire et
 # ajoute le chemin pour la recherche de modules 
 bot_filename=args.bot+'.py'
+##bot_filename='AmbianceTeam'+'.py'
+
+
 for root, dirs, files in os.walk('.'):
     for f in files:
         if f==bot_filename:
@@ -39,17 +42,22 @@ for root, dirs, files in os.walk('.'):
 
 # charge le joueur-robot
 bot = importlib.import_module(args.bot)
+##bot = importlib.import_module('AmbianceTeam')
 
 # récupère les informations de connexion
 HOST, PORT = args.server.strip().split(':')
+##HOST = 'localhost'
+##PORT = '9876'
 
-logging.info('Bot {} playing as {} onto {}'.format(args.bot, args.player, args.server))
+logging.info('Bot {} playing as {} onto {}'.format('AmbianceTeam', 'Elou', 'localhost:9876'))
 
 
 def main():
         
     # inscrit le joueur-robot à la compétition
+    ##uid = poooc.register(args.player, HOST, PORT)
     uid = poooc.register(args.player, HOST, PORT)
+    
     if uid is None:
         logging.error('Registration failed')
         return
