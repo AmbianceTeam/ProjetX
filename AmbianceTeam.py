@@ -2,9 +2,13 @@
 import re
 #from poooc import order, state, state_on_update, etime
 import poooc
-import tkinter 
+
+
+#####A mettre en commentaire lors des tests sur Cloud9#####
+"""import tkinter 
 from interface_graphique import dessiner_terrain
 import threading
+
 
 
 class GUIThread(threading.Thread):
@@ -36,8 +40,8 @@ class GUIInterface(tkinter.Tk):
 
 
 global newGUIThread; newGUIThread = GUIThread()
-newGUIThread.start()
-
+newGUIThread.start()"""
+###########################################################
 
 # Définition de la classe Cellule
 class Cellule:
@@ -256,21 +260,6 @@ def init_pooo(init_str):
     global Map
     Map=Graphe(listCellules,listLignes,listInfoTerrain)
 
-    ############Dessin du terrain######################
-    
-    """#window creation
-    window = Tk() # Création de l'objet window (fenetre)
-    #canvas creation
-    w = Canvas(window , width=1000, height =500) # Création d'un Canvas à partir de la fenetre "window"
-    w. pack ()"""
-    
-    
-
-    #dessiner_terrain(GUIInterface().canvas,Map)
-
-
-    ############FIN Dessin du terrain######################
-
 
 
 
@@ -425,7 +414,11 @@ def play_pooo():
         state = poooc.state_on_update()
         # Mise à jour de la Map :
         decrypt_state(Map,state)
-        dessiner_terrain(newGUIThread.window.canvas,Map)
+        
+        #####A mettre en commentaire lors des tests sur Cloud9#####
+        """
+        dessiner_terrain(newGUIThread.window.canvas,Map)"""
+        ###########################################################
         
         '''for i in range(len(Map.cellAlly)):
             poooc.order(setmove(userid,100,Map.cellAlly[i],Map.cellAlly[i].voisinsNeut[0]))'''
