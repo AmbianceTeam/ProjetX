@@ -72,7 +72,7 @@ class Ligne:
     
    
     # Fonction d'initialisation 
-    def __init__(self,idline,Cell1,Cell2, dist, nbunitfrom1=[], nbunitfrom2=[]):   
+    def __init__(self,idline,Cell1,Cell2, dist, nbunitfrom1=[(0,0,0)], nbunitfrom2=[(0,0,0)]):   
         self.idline = idline                      # Numéro de ligne
         self.Cell1 = Cell1                        # objet de type Cellule 
         self.Cell2 = Cell2                        # objet de type Cellule
@@ -351,8 +351,8 @@ def decrypt_state(graph,state_str):                                             
         
     for i in range(len(info_moves)):                                            # Récupération des infos sur les mouvements des unités
         
-        graph.listLignes[i].nbunitfrom2 = []                                    #Réinitialisation des listes comportant les infos sur les unités en mvt sur chaque ligne
-        graph.listLignes[i].nbunitfrom1 = []
+        graph.listLignes[i].nbunitfrom2 = [(0,0,0)]                                    #Réinitialisation des listes comportant les infos sur les unités en mvt sur chaque ligne
+        graph.listLignes[i].nbunitfrom1 = [(0,0,0)]
         
         regex12 = re.compile('[0-9]+[<>]')                                      #Récupération de la premiere cell composant la ligne
         res = regex12.findall(info_moves[i][0])
@@ -479,15 +479,18 @@ def play_pooo():
                     
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut == [] and Map.cellAlly[i].voisinsAlly != [] :    #Si la cellule courante est entourés d'alliés
                 for j in range(len(Map.cellAlly[i].voisinsAlly)):                                                               #On parcourt la liste des voisins de cette cellules
-                    
+                    cible2 = ''
+                    danger = 0
                     if Map.cellAlly[i].voisinsAlly[j].voisinsEnem != [] :                                                       #Si une des cellules voisines est proche d'un ennemi, on lui enverra les unités en priorité (d'où le danger = 1)
+                        logging.info('condition 1')
                         danger = 1
                         cible2 = Map.cellAlly[i].voisinsAlly[j] 
                     elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :                                     #Si il n'y a pas de danger et qu'une cellule voisine a une cellule neutre à portée, on lui envoie les units
+                        logging.info('condition 2')
                         cible2 = Map.cellAlly[i].voisinsAlly[j]     
                     
                         
-                if Map.cellAlly[i].nboff >= 5 :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
+                if Map.cellAlly[i].nboff >= 5 and cible2 != '' :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
         
         
@@ -502,11 +505,20 @@ def play_pooo():
                         logging.info('bestRatio: {}'.format(bestRatio))
                         cible = Map.cellAlly[i].voisinsEnem[j]
                         
-                if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                if ((cible.nboff + cible.nbdef + 5) < Map.cellAlly[i].nboff and cible.prod < Map.cellAlly[i].prod) :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
                     
+                
+                if Map.cellAlly[i].nboff == Map.cellAlly[i].offsize :
+                    mv = setmove(userid,100,Map.cellAlly[i],cible)
+                    poooc.order(mv)
+                
                     
+                elif ((cible.nboff + cible.nbdef + 5) > Map.cellAlly[i].nboff) and cible.prod >= Map.cellAlly[i].prod :
+                    mv = setmove(userid,100,Map.cellAlly[i],cible)
+                    poooc.order(mv)
+                
         ####### FIN IA ########
         
     
