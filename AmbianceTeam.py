@@ -350,7 +350,8 @@ def decrypt_state(graph,state_str):                                             
                 graph.listCellules[i].voisinsEnem.append(graph.listCellules[i].voisins[j][1])       
         
     for i in range(len(info_moves)):                                            # Récupération des infos sur les mouvements des unités
-        
+        """ Ici tu réinitialises les len(info_moves) premières lignes, mais ce n'est pas forcément les len(info_moves) premières lignes qui ont des mouvements,
+        de toutes façon l'initialisation est inutile ici puisque tu écris par les nouvelles valeurs par dessus les anciennes"""
         graph.listLignes[i].nbunitfrom2 = [(0,0,0)]                                    #Réinitialisation des listes comportant les infos sur les unités en mvt sur chaque ligne
         graph.listLignes[i].nbunitfrom1 = [(0,0,0)]
         
@@ -453,8 +454,10 @@ def play_pooo():
                 if cible.voisinsEnem != []:
                     nbEnem = 0
                     for j in range(len(cible.voisinsEnem)):
-                        ligneEnem = ligne(Map, cible.idcell, cible.voisinsEnem[0].idcell)       # On récupère la ligne qui relie la cible à la cellule ennemie 
+                        ligneEnem = ligne(Map, cible.idcell, cible.voisinsEnem[j].idcell)       # On récupère la ligne qui relie la cible à la cellule ennemie 
+
                         nbEnem = nbEnem + ligneEnem.nbunitfrom2[0][0]                           # On récupère le nombre d'unités ennemies présentes sur la ligne 
+                        logging.info('ligneEnem trouvé ? {} | ID Cell Cible {} | ID Cell ennemie {} | nbEnem : {} | '.format(ligneEnem,cible.idcell,cible.voisinsEnem[j].idcell,ligneEnem.nbunitfrom2[0]))
                     
                     nbRest = nbEnem - (cible.nboff + cible.nbdef)                               # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront    
                     
