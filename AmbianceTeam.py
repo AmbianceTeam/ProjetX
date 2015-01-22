@@ -348,12 +348,16 @@ def decrypt_state(graph,state_str):                                             
                 
             elif graph.listCellules[i].voisins[j][1].couleur != int(-1) and graph.listCellules[i].voisins[j][1].couleur != graph.listInfoTerrain[2] :
                 graph.listCellules[i].voisinsEnem.append(graph.listCellules[i].voisins[j][1])       
-        
+    
+    for i in range(len(graph.listLignes)):
+        graph.listLignes[i].nbunitfrom2 = []                                    #Réinitialisation des listes comportant les infos sur les unités en mvt sur chaque ligne
+        graph.listLignes[i].nbunitfrom1 = []
+    
     for i in range(len(info_moves)):                                            # Récupération des infos sur les mouvements des unités
         """ Ici tu réinitialises les len(info_moves) premières lignes, mais ce n'est pas forcément les len(info_moves) premières lignes qui ont des mouvements,
         de toutes façon l'initialisation est inutile ici puisque tu écris par les nouvelles valeurs par dessus les anciennes"""
-        graph.listLignes[i].nbunitfrom2 = [(0,0,0)]                                    #Réinitialisation des listes comportant les infos sur les unités en mvt sur chaque ligne
-        graph.listLignes[i].nbunitfrom1 = [(0,0,0)]
+        #graph.listLignes[i].nbunitfrom2 = [(0,0,0)]                                    #Réinitialisation des listes comportant les infos sur les unités en mvt sur chaque ligne
+        #graph.listLignes[i].nbunitfrom1 = [(0,0,0)]
         
         regex12 = re.compile('[0-9]+[<>]')                                      #Récupération de la premiere cell composant la ligne
         res = regex12.findall(info_moves[i][0])
@@ -455,9 +459,21 @@ def play_pooo():
                     nbEnem = 0
                     for j in range(len(cible.voisinsEnem)):
                         ligneEnem = ligne(Map, cible.idcell, cible.voisinsEnem[j].idcell)       # On récupère la ligne qui relie la cible à la cellule ennemie 
-
-                        nbEnem = nbEnem + ligneEnem.nbunitfrom2[0][0]                           # On récupère le nombre d'unités ennemies présentes sur la ligne 
-                        logging.info('ligneEnem trouvé ? {} | ID Cell Cible {} | ID Cell ennemie {} | nbEnem : {} | '.format(ligneEnem,cible.idcell,cible.voisinsEnem[j].idcell,ligneEnem.nbunitfrom2[0]))
+                        if (ligneEnem.Cell1.idcell==cible.idcell):                   #Alors les unités ennemies viennent de unitfrom2
+                            logging.info('condition______________________ 1')
+                            for k in range(len(ligneEnem.nbunitfrom2)):         #On parcourt les différents paquets d'unités circulant de 2 vers 1 
+                                if(ligneEnem.nbunitfrom2[k][1] != Map.listInfoTerrain[2]): # On vérifie qu'il s'agit d'un paquet ennemi
+                                    logging.info('nbunitfrom2[k]: _______________ {}'.format(ligneEnem.nbunitfrom2[k]))
+                                    nbEnem = nbEnem + ligneEnem.nbunitfrom2[k][0]
+                        
+                        elif(ligneEnem.Cell1.idcell==cible.voisinsEnem[j].idcell):   #Alors les unités ennemies viennent de unitfrom1
+                            logging.info('condition______________________ 2')
+                            for k in range(len(ligneEnem.nbunitfrom1)):         #On parcourt les différents paquets d'unités circulant de 1 vers 2
+                                if(ligneEnem.nbunitfrom1[k][1] != Map.listInfoTerrain[2]): # On vérifie qu'il s'agit d'un paquet ennemi
+                                    logging.info('nbunitfrom1[k]: _______________ {}'.format(ligneEnem.nbunitfrom1[k]))
+                                    nbEnem = nbEnem + ligneEnem.nbunitfrom1[k][0]
+                    
+                        logging.info('ligneEnem trouvé ? {} | ID Cell Cible {} | ID Cell ennemie {} | nbEnem : {} | '.format(ligneEnem,cible.idcell,cible.voisinsEnem[j].idcell,nbEnem))
                     
                     nbRest = nbEnem - (cible.nboff + cible.nbdef)                               # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront    
                     
