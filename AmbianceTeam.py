@@ -450,10 +450,13 @@ def play_pooo():
                 
                 # Si jamais la cellule neutre qui nous intéresse à un ennemi dans ses voisins
                 
-                if cible.voisinsEnem != []:                                 
-                    ligneEnem = ligne(Map, cible.idcell, cible.voisinsEnem[0].idcell)  # On récupère la ligne qui relie la cible à la cellule ennemie 
-                    nbEnem = ligneEnem.nbunitfrom2[0][0]                              # On récupère le nombre d'unités ennemies présentes sur la ligne 
-                    nbRest = nbEnem - (cible.nboff + cible.nbdef)               # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront
+                if cible.voisinsEnem != []:
+                    nbEnem = 0
+                    for j in range(len(cible.voisinsEnem)):
+                        ligneEnem = ligne(Map, cible.idcell, cible.voisinsEnem[0].idcell)       # On récupère la ligne qui relie la cible à la cellule ennemie 
+                        nbEnem = nbEnem + ligneEnem.nbunitfrom2[0][0]                           # On récupère le nombre d'unités ennemies présentes sur la ligne 
+                    
+                    nbRest = nbEnem - (cible.nboff + cible.nbdef)                               # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront    
                     
                     # Si le nombre d'unités alliés est supérieure au nombre d'unités restants sur la cellule cible
                     
