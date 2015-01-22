@@ -432,20 +432,50 @@ def play_pooo():
             #logging.info('ratioCourant______________________________: {}'.format(ratioCourant))
             
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
+                
+                
+                # Initialisation des variables cible et bestRatio, bestRatio correspondant à la cellule que l'on juge la plus intéressante ((nb unités nécessaire + dist)/prod), plus ce ratio est petit, mieux c'est 
                 cible = Map.cellAlly[i].voisinsNeut[0]
                 bestRatio = (Map.cellAlly[i].voisinsNeut[0].nbdef + Map.cellAlly[i].voisinsNeut[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[0].idcell).dist)/Map.cellAlly[i].voisinsNeut[0].prod
+                
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
+                    
                     ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod
+                    
                     if ratioCourant < bestRatio :                                               #Et on choisit celle qui a le plus petit ratio (cellule la plus rentable) et elle devient la cible
                         bestRatio = ratioCourant  
                         cible = Map.cellAlly[i].voisinsNeut[j]
             
+                
+                
+                # Si jamais la cellule neutre qui nous intéresse à un ennemi dans ses voisins
+                
+                if cible.voisinsEnem != []:                                 
+                    ligneEnem = ligne(Map, cible.idcell, cible.voisinsEnem[0].idcell)  # On récupère la ligne qui relie la cible à la cellule ennemie 
+                    nbEnem = ligneEnem.nbunitfrom2[0][0]                              # On récupère le nombre d'unités ennemies présentes sur la ligne 
+                    nbRest = nbEnem - (cible.nboff + cible.nbdef)               # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront
+                    
+                    # Si le nombre d'unités alliés est supérieure au nombre d'unités restants sur la cellule cible
+                    
+                    if nbRest < Map.cellAlly[i].nboff:                     
+                        mv = setmove(userid,100,Map.cellAlly[i],cible)          # On envoie nos unités sur la cellule, pour la conquérir
+                        poooc.order(mv)
+                        
 
-                if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
-                    mv = setmove(userid,100,Map.cellAlly[i],cible)
+
+                elif (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff:       #Sinon, si il n'y a pas d'ennemis à proximité, on part la conquérir si on a assez d'unités
+                    mv = setmove(userid,100,Map.cellAlly[i],cible)            
                     poooc.order(mv)
                     
                     
+                    
+                    
+                    
+                
+                
+                
+                
+                
                     
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut == [] and Map.cellAlly[i].voisinsAlly != [] :    #Si la cellule courante est entourés d'alliés
                 for j in range(len(Map.cellAlly[i].voisinsAlly)):                                                               #On parcourt la liste des voisins de cette cellules
@@ -455,11 +485,11 @@ def play_pooo():
                         cible2 = Map.cellAlly[i].voisinsAlly[j] 
                     elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :                                     #Si il n'y a pas de danger et qu'une cellule voisine a une cellule neutre à portée, on lui envoie les units
                         cible2 = Map.cellAlly[i].voisinsAlly[j]     
-                    else :                                                                                                      #Sinon on envoie à la premiere cellule voisine rencontrée (possibilité d'améliorer bien sur ;))
-                        cible2 = Map.cellAlly[i].voisinsAlly[0]
+                    
                         
                 if Map.cellAlly[i].nboff >= 5 :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
+        
         
             if Map.cellAlly[i].voisinsEnem != [] :
                 logging.info('Une cellule Ally a un ennemi')
@@ -502,7 +532,7 @@ def main() :
     uid = "blablacar"
     register_pooo(uid)
     
-    
+    print(ligne(Map,Map.listCellules[0].idcell,Map.listCellules[1].idcell).nbunitfrom1)
     
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
