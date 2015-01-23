@@ -516,7 +516,7 @@ def play_pooo():
                         cible2 = Map.cellAlly[i].voisinsAlly[j]     
                     
                         
-                if Map.cellAlly[i].nboff >= 5 and cible2 != '' :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
+                if Map.cellAlly[i].nboff >= 5 and cible2 != '':                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
         
         
@@ -531,7 +531,7 @@ def play_pooo():
                         logging.info('bestRatio: {}'.format(bestRatio))
                         cible = Map.cellAlly[i].voisinsEnem[j]
                         
-                if ((cible.nboff + cible.nbdef + 5) < Map.cellAlly[i].nboff and cible.prod < Map.cellAlly[i].prod) :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                if ((cible.nboff + cible.nbdef + 3) < Map.cellAlly[i].nboff and cible.prod < Map.cellAlly[i].prod) :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                     logging.info('condition____________________ ennemi 1')
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
