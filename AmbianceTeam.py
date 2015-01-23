@@ -414,23 +414,27 @@ def play_pooo():
 
 
     
-    while True:
+    
 
+    state = poooc.state_on_update()
+    # Mise à jour de la Map :
+    decrypt_state(Map,state)
+    logging.info('condition____________________ ennemi 3')
+    #####A mettre en commentaire lors des tests sur Cloud9#####
+    """
+    dessiner_terrain(newGUIThread.window.canvas,Map)"""
+    ###########################################################
+    
+    '''for i in range(len(Map.cellAlly)):
+        poooc.order(setmove(userid,100,Map.cellAlly[i],Map.cellAlly[i].voisinsNeut[0]))'''
+    '''if Map.listCellules[0].nboff > Map.listCellules[1].nboff :
+        poooc.order(setmove(userid,100,Map.listCellules[0],Map.listCellules[1]))'''
+    ####### IA ########*
+    while True :
         state = poooc.state_on_update()
-        # Mise à jour de la Map :
         decrypt_state(Map,state)
-        
-        #####A mettre en commentaire lors des tests sur Cloud9#####
-        """
-        dessiner_terrain(newGUIThread.window.canvas,Map)"""
-        ###########################################################
-        
-        '''for i in range(len(Map.cellAlly)):
-            poooc.order(setmove(userid,100,Map.cellAlly[i],Map.cellAlly[i].voisinsNeut[0]))'''
-        '''if Map.listCellules[0].nboff > Map.listCellules[1].nboff :
-            poooc.order(setmove(userid,100,Map.listCellules[0],Map.listCellules[1]))'''
-        ####### IA ########
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
+
             prodmax = 0
             danger = 0
             ratioCourant = 0
@@ -483,8 +487,8 @@ def play_pooo():
                         mv = setmove(userid,100,Map.cellAlly[i],cible)          # On envoie nos unités sur la cellule, pour la conquérir
                         poooc.order(mv)
                         
-
-
+    
+    
                 elif (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff:       #Sinon, si il n'y a pas d'ennemis à proximité, on part la conquérir si on a assez d'unités
                     mv = setmove(userid,100,Map.cellAlly[i],cible)            
                     poooc.order(mv)
@@ -528,18 +532,18 @@ def play_pooo():
                         cible = Map.cellAlly[i].voisinsEnem[j]
                         
                 if ((cible.nboff + cible.nbdef + 5) < Map.cellAlly[i].nboff and cible.prod < Map.cellAlly[i].prod) :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                    logging.info('condition____________________ ennemi 1')
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
                     
                 
                 if Map.cellAlly[i].nboff == Map.cellAlly[i].offsize :
+                    logging.info('condition____________________ ennemi 2')
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
                 
                     
-                elif ((cible.nboff + cible.nbdef + 5) > Map.cellAlly[i].nboff) and cible.prod >= Map.cellAlly[i].prod :
-                    mv = setmove(userid,100,Map.cellAlly[i],cible)
-                    poooc.order(mv)
+                
                 
         ####### FIN IA ########
         
