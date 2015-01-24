@@ -483,8 +483,9 @@ def play_pooo():
                                     nbEnem = nbEnem + ligneEnem.nbunitfrom1[k][0]
                     
                         logging.info('ligneEnem trouvé ? {} | ID Cell Cible {} | ID Cell ennemie {} | nbEnem : {} | '.format(ligneEnem,cible.idcell,cible.voisinsEnem[j].idcell,nbEnem))
-                    
-                    nbRest = nbEnem - (cible.nboff + cible.nbdef)                               # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront    
+                        
+                    nbRest = abs((cible.nboff + cible.nbdef) - nbEnem)                               # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront    
+                    logging.info('nbrest  =  {}'.format(nbRest))
                     
                     # Si le nombre d'unités alliés est supérieure au nombre d'unités restants sur la cellule cible
                     
@@ -515,12 +516,12 @@ def play_pooo():
                     
                     
                     if Map.cellAlly[i].voisinsAlly[j].voisinsEnem != [] :                                                       #Si une des cellules voisines est proche d'un ennemi, on lui enverra les unités en priorité (d'où le danger = 1)
-                        logging.info('condition 1')
+                        #logging.info('condition 1')
                         danger = 1
                         cible2 = Map.cellAlly[i].voisinsAlly[j]
-                        logging.info('cible2 : _____ {} et Cellule depart : _____ {}'.format(cible2.idcell,Map.cellAlly[i].idcell))
+                        #logging.info('cible2 : _____ {} et Cellule depart : _____ {}'.format(cible2.idcell,Map.cellAlly[i].idcell))
                     elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :                                     #Si il n'y a pas de danger et qu'une cellule voisine a une cellule neutre à portée, on lui envoie les units
-                        logging.info('condition 2')
+                        #logging.info('condition 2')
                         cible2 = Map.cellAlly[i].voisinsAlly[j]     
                     
                         
@@ -548,7 +549,7 @@ def play_pooo():
                         cible = Map.cellAlly[i].voisinsEnem[j]
                         
                 if ((cible.nboff + cible.nbdef + 3) < Map.cellAlly[i].nboff and cible.prod < Map.cellAlly[i].prod) :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
-                    #logging.info('condition____________________ ennemi 1')
+                    logging.info('condition____________________ ennemi 1')
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
                     
