@@ -297,7 +297,7 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
             listDist.append([Map.cellAlly[i],0]) # listDist : [ [Cell,dist] , [Cell,dist] , ... ]
         else :
             listDist.append([Map.cellAlly[i],2147483647])  #2 147 483 647 considéré comme l'infini
-    print('S :'+ str(indiceSource) + ' D: '+ str(indiceDest))
+    #print('S :'+ str(indiceSource) + ' D: '+ str(indiceDest))
 
     
     while len(listAExplorer) != 0: 
@@ -307,7 +307,7 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
             if(listDist[listAExplorer[i][0]][1] < distMin):
                 distMin = listDist[listAExplorer[i][0]][1]
                 pivot = listAExplorer[i][0] # pivot : indice du pivot   listDist[listAExplorer[i][0]][0]
-        print('pivot__: '+str(pivot)) #indice pivot
+        #print('pivot__: '+str(pivot)) #indice pivot
         
         for j in range(len(listDist[pivot][0].voisinsAlly)):
             for m in range(len(listDist)):                                      # trouver l'indice des voisins du pivot dans la listDist
@@ -319,14 +319,13 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
                 listPred[indiceVoisin] = pivot
         
         listAExplorer.remove([pivot,listDist[pivot][0]]) # on enleve le pivot de la listAExplorer
-        print('listAExplorer __: ')
-        print(listAExplorer)
+        #print('listAExplorer __: ')
+        #print(listAExplorer)
     indice=indiceDest #indice de la cellule de destination dans la liste des cellules Alliées
     
     print(listPred)
     for l in range(len(listPred)):
         indice = listPred[indice]
-        print('indice___ '+str(indice))
         if(indice == indiceSource):                                             # Si on trouve l'indice source , on arrete la boucle 
             break
         chemin.insert(0,listDist[indice][0])                                    # On insère la cellule qui constitue une étape du chemin
