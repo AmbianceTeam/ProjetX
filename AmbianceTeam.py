@@ -419,7 +419,7 @@ def play_pooo():
     state = poooc.state_on_update()
     # Mise à jour de la Map :
     decrypt_state(Map,state)
-    logging.info('condition____________________ ennemi 3')
+    
     #####A mettre en commentaire lors des tests sur Cloud9#####
     """
     dessiner_terrain(newGUIThread.window.canvas,Map)"""
@@ -439,6 +439,11 @@ def play_pooo():
             danger = 0
             ratioCourant = 0
             #logging.info('ratioCourant______________________________: {}'.format(ratioCourant))
+            
+            
+            #   /!\  PHASE 1 : PRISE DES CELLULES NEUTRES /!\
+            
+            
             
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
                 
@@ -498,30 +503,41 @@ def play_pooo():
                     
                     
                 
-                
+                #   /!\  PHASE 2 : RAVITAILLEMENT  /!\
                 
                 
                 
                     
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut == [] and Map.cellAlly[i].voisinsAlly != [] :    #Si la cellule courante est entourés d'alliés
+                danger = 0
+                cible2 = ''
                 for j in range(len(Map.cellAlly[i].voisinsAlly)):                                                               #On parcourt la liste des voisins de cette cellules
-                    cible2 = ''
-                    danger = 0
+                    
+                    
                     if Map.cellAlly[i].voisinsAlly[j].voisinsEnem != [] :                                                       #Si une des cellules voisines est proche d'un ennemi, on lui enverra les unités en priorité (d'où le danger = 1)
                         logging.info('condition 1')
                         danger = 1
-                        cible2 = Map.cellAlly[i].voisinsAlly[j] 
+                        cible2 = Map.cellAlly[i].voisinsAlly[j]
+                        logging.info('cible2 : _____ {} et Cellule depart : _____ {}'.format(cible2.idcell,Map.cellAlly[i].idcell))
                     elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :                                     #Si il n'y a pas de danger et qu'une cellule voisine a une cellule neutre à portée, on lui envoie les units
                         logging.info('condition 2')
                         cible2 = Map.cellAlly[i].voisinsAlly[j]     
                     
                         
-                if Map.cellAlly[i].nboff >= 5 and cible2 != '':                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
+                if Map.cellAlly[i].nboff >= 5 and cible2 != '' :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
         
-        
+            
+            
+            
+            
+                # /!\  PHASE 3 : CONQUETE CELLULES ENNEMIES  /!\
+            
+            
+            
+            
             if Map.cellAlly[i].voisinsEnem != [] :
-                logging.info('Une cellule Ally a un ennemi')
+                #logging.info('Une cellule Ally a un ennemi')
                 cible = Map.cellAlly[i].voisinsEnem[0]
                 bestRatio = (Map.cellAlly[i].voisinsEnem[0].nbdef + Map.cellAlly[i].voisinsEnem[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[0].idcell).dist)/Map.cellAlly[i].voisinsEnem[0].prod
                 for j in range(len(Map.cellAlly[i].voisinsEnem)) :
@@ -532,7 +548,7 @@ def play_pooo():
                         cible = Map.cellAlly[i].voisinsEnem[j]
                         
                 if ((cible.nboff + cible.nbdef + 3) < Map.cellAlly[i].nboff and cible.prod < Map.cellAlly[i].prod) :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
-                    logging.info('condition____________________ ennemi 1')
+                    #logging.info('condition____________________ ennemi 1')
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
                     
@@ -560,17 +576,19 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 
 def main() :
     
-    init_string = "INIT013fe2e8-86df-4fa3-960d-a0a537849a68TO2[1];2;7CELLS:0(0,0)'100'30'8'I,1(0,5)'100'30'8'I,2(5,0)'100'30'8'I,3(5,5)'200'30'8'II,4(5,10)'100'30'8'I,5(10,5)'100'30'8'I,6(10,10)'100'30'8'I;6LINES:0@4800OF1,0@4800OF2,2@4700OF3,3@4700OF4,4@4800OF6,5@4800OF6"
+    init_string = "INITe6618100-b23b-44d6-8a3e-e9dcd43fe7aeTO2[0];2;7CELLS:0(0,0)'100'20'8'I,1(5000,0)'200'30'8'II,2(2500,5000)'100'20'8'I,3(5000,5000)'300'40'8'III,4(7500,5000)'100'20'8'I,5(5000,10000)'200'30'8'II,6(10000,10000)'100'20'8'I;8LINES:0@5390OF2,1@5290OF4,1@5290OF2,1@4500OF3,2@5290OF5,3@4500OF5,4@5390OF6,4@5290OF5"
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
 
     state_str = "STATE92352897-2119-4c57-b26d-44ec48982006IS2;7CELLS:0[0]5'0,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]5'0;0MOVES"
-    state_str2= "STATE9c3a9d60-adaa-46a7-af25-40c933ea3a1eIS2;7CELLS:0[0]1'2,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]1'2;2MOVES:0>6[0]@3665229582'1,4<6[1]@3665229576'6"
+    state_str2= "STATE06783b64-8526-4dd1-b799-fd27bb3be4a7IS2;7CELLS:0[0]20'8,1[0]30'8,2[0]20'8,3[-1]12'0,4[1]18'8,5[0]8'5,6[1]4'8;0MOVES"
     decrypt_state(Map,state_str2)
     
     uid = "blablacar"
     register_pooo(uid)
     
-    print(ligne(Map,Map.listCellules[0].idcell,Map.listCellules[1].idcell).nbunitfrom1)
+    print(Map.cellAlly[1].nboff == Map.cellAlly[1].offsize)
+    print(Map.cellAlly[1].idcell)
+    print(Map.cellAlly[1].voisinsEnem)
     
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
