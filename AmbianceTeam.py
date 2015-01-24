@@ -276,7 +276,6 @@ def ligne(graph,cell1,cell2):                                                   
             
 def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le plus court parmis les cellules alliées 
 
-    listCellulesExplorees = []
     listAExplorer = []
     listDist = []
     listPred = []
@@ -306,7 +305,7 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
         for i in range(len(listAExplorer)):
             if(listDist[listAExplorer[i][0]][1] < distMin):
                 distMin = listDist[listAExplorer[i][0]][1]
-                pivot = listAExplorer[i][0] # pivot : indice du pivot   listDist[listAExplorer[i][0]][0]
+                pivot = listAExplorer[i][0] # pivot : indice du pivot   
         #print('pivot__: '+str(pivot)) #indice pivot
         
         for j in range(len(listDist[pivot][0].voisinsAlly)):
