@@ -272,6 +272,69 @@ def ligne(graph,cell1,cell2):                                                   
         if graph.listCellules[cell1].voisins[i][1].idcell == cell2 :
             line = graph.listCellules[cell1].voisins[i][0]
             return line
+            
+            
+def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le plus court parmis les cellules alliées 
+
+    listCellulesExplorees = []
+    listAExplorer = []
+    listDist = []
+    listPred = []
+    
+    chemin = []
+    
+    # INITIALISATION de la liste des Distances
+    for i in range(len(Map.cellAlly)):
+        listAExplorer.append([i,Map.cellAlly[i]]) #Liste des cellules à explorer i = idlocal
+        listPred.append(0) #liste des prédessesseur  [0,0,0,0,0,0,0....]
+        if Map.cellAlly[i]==CellD: #récupération de l'indice local de CellDestination
+            indiceDest = i
+            
+        if Map.cellAlly[i]==CellS: #récupération de l'indice local de CellSource 
+            indiceSource = i
+            
+        if Map.cellAlly[i]==CellS:
+            listDist.append([Map.cellAlly[i],0]) # listDist : [ [Cell,dist] , [Cell,dist] , ... ]
+        else :
+            listDist.append([Map.cellAlly[i],2147483647])  #2 147 483 647 considéré comme l'infini
+    print('S :'+ str(indiceSource) + ' D: '+ str(indiceDest))
+
+    
+    while len(listAExplorer) != 0: 
+        # CHOIX du PIVOT 
+        distMin = 2147483647
+        for i in range(len(listAExplorer)):
+            if(listDist[listAExplorer[i][0]][1] < distMin):
+                distMin = listDist[listAExplorer[i][0]][1]
+                pivot = listAExplorer[i][0] # pivot : indice du pivot   listDist[listAExplorer[i][0]][0]
+        print('pivot__: '+str(pivot)) #indice pivot
+        
+        for j in range(len(listDist[pivot][0].voisinsAlly)):
+            for m in range(len(listDist)):                                      # trouver l'indice des voisins du pivot dans la listDist
+                if(listDist[pivot][0].voisinsAlly[j]==listDist[m][0]):
+                    indiceVoisin = m
+                
+            if( listDist[pivot][1] + ligne(Map,listDist[pivot][0].idcell,listDist[pivot][0].voisinsAlly[j].idcell).dist < listDist[indiceVoisin][1] ):
+                listDist[indiceVoisin][1] = listDist[pivot][1] + ligne(Map,listDist[pivot][0].idcell,listDist[pivot][0].voisinsAlly[j].idcell).dist
+                listPred[indiceVoisin] = pivot
+        
+        listAExplorer.remove([pivot,listDist[pivot][0]]) # on enleve le pivot de la listAExplorer
+        print('listAExplorer __: ')
+        print(listAExplorer)
+    indice=indiceDest #indice de la cellule de destination dans la liste des cellules Alliées
+    
+    print(listPred)
+    for l in range(len(listPred)):
+        indice = listPred[indice]
+        print('indice___ '+str(indice))
+        if(indice == indiceSource):                                             # Si on trouve l'indice source , on arrete la boucle 
+            break
+        chemin.insert(0,listDist[indice][0])                                    # On insère la cellule qui constitue une étape du chemin
+
+        
+    chemin.insert(0,listDist[indiceSource][0]) # on ajoute la tête et la queue du chemin 
+    chemin.append(listDist[indiceDest][0])
+    return chemin
     
 
 
@@ -618,6 +681,7 @@ def main() :
     register_pooo(uid)
     
     print(Map.listCellules[10].voisinsNeut)
+    print(dijkstra(Map.listCellules[10],Map.listCellules[8]))
     
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
