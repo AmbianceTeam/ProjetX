@@ -504,21 +504,23 @@ def play_pooo():
             
             if Map.cellAlly[i].voisinsEnem != [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il y a des ennemis autour de la cellule et qu'il y a des voisins neutres
                 
-                cible = Map.cellAlly[i].voisinsNeut[0]
+                cible = Map.cellAlly[i].voisinsNeut[0]                                          #Initialisation de cible et bestRatio
                 bestRatio = 100000
                 
                 
-                for j in range(len(Map.cellAlly[i].voisinsNeut)) :
-                    #logging.info('On regarde la cellule_______{}'.format(Map.cellAlly[i].voisinsNeut[j].idcell))
-                    ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod
+                for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins NEUTRES de la cellule
                     
-                    if Map.cellAlly[i].voisinsNeut[j].voisinsEnem == [] and ratioCourant < bestRatio :
+                    ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod                            #Calcul du ratio servant à déterminer la cellule la plus rentable
+                    
+                    #Si un voisin neutre n'a pas de voisin Ennemi et qu'il a un meilleur ratio, on va le prvilégier
+                    
+                    if Map.cellAlly[i].voisinsNeut[j].voisinsEnem == [] and ratioCourant < bestRatio :                      
                         cible = Map.cellAlly[i].voisinsNeut[j]
                         bestRatio = ratioCourant
-                    #logging.info('La cible est la cellule {}'.format(cible.idcell))
                     
                     
-                
+                    
+                # Après avoir choisi la cellule à attaquer, on envoie l'ordre en s'assurant qu'on a bien assez d'unités et que la cellule n'a pas de voisins ennemis (au cas où la cellule choisie soit restée celle de l'init)
                 
                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff and cible.voisinsEnem == [] :
                     mv = setmove(userid,100,Map.cellAlly[i],cible)            
@@ -547,7 +549,7 @@ def play_pooo():
                         cible2 = Map.cellAlly[i].voisinsAlly[j]     
                     
                         
-                if Map.cellAlly[i].nboff >= 5 and cible2 != '' :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
+                if Map.cellAlly[i].nboff >= 2 and cible2 != '' :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
         
             
@@ -599,17 +601,17 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 
 def main() :
     
-    init_string = "INIT5be38d52-0fe4-46fc-816f-f9eb69a4fd8bTO2[1];2;9CELLS:0(0,0)'100'20'8'I,1(5000,0)'100'20'8'I,2(10000,0)'200'30'8'II,3(0,5000)'100'20'8'I,4(5000,5000)'300'40'8'III,5(10000,5000)'100'20'8'I,6(0,10000)'200'30'8'II,7(5000,10000)'100'20'8'I,8(10000,10000)'100'20'8'I;14LINES:0@4800OF1,0@4800OF3,1@4600OF4,1@4700OF2,1@6871OF5,1@6871OF3,3@4600OF4,3@6871OF7,4@4600OF7,4@4600OF5,5@4800OF8,5@6871OF7,6@4700OF7,7@4800OF8"
+    init_string = "INIT6c78da94-1d8a-45bf-aa3b-3dce9a275ce1TO2[1];2;11CELLS:0(0,0)'100'20'8'I,1(2500,2500)'100'20'8'I,2(5000,2500)'100'20'8'I,3(7500,2500)'100'20'8'I,4(2500,5000)'100'20'8'I,5(5000,5000)'300'40'8'III,6(7500,5000)'100'20'8'I,7(2500,7500)'100'20'8'I,8(5000,7500)'100'20'8'I,9(7500,7500)'100'20'8'I,10(10000,10000)'100'20'8'I;18LINES:0@5390OF2,0@7705OF7,0@7705OF3,0@3335OF1,0@5390OF4,1@3135OF5,2@2100OF5,3@3135OF5,3@7705OF10,4@2100OF5,5@3135OF7,5@2100OF8,5@3135OF9,5@2100OF6,6@5390OF10,7@7705OF10,8@5390OF10,9@3335OF10"
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
 
     state_str = "STATE92352897-2119-4c57-b26d-44ec48982006IS2;7CELLS:0[0]5'0,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]5'0;0MOVES"
-    state_str2= "STATE9e8b1cb9-7306-4996-b4ca-030452d73a92IS2;9CELLS:0[0]2'8,1[0]4'8,2[-1]9'0,3[1]2'1,4[-1]12'0,5[0]2'1,6[-1]9'0,7[1]4'8,8[1]2'8;2MOVES:0>5[0]@4339979580'1,7<5[1]@4339979579'8"
+    state_str2= "STATE6c78da94-1d8a-45bf-aa3b-3dce9a275ce1IS2;11CELLS:0[0]2'8,1[0]2'8,2[0]1'4,3[-1]6'0,4[-1]6'0,5[0]4'0,6[1]2'4,7[-1]6'0,8[1]1'0,9[1]2'8,10[1]2'8;2MOVES:0>7[0]@4349032374'4,8<7[1]@4349032375'10"
     decrypt_state(Map,state_str2)
     
     uid = "blablacar"
     register_pooo(uid)
     
-    print(Map.listCellules[0].voisinsEnem)
+    print(Map.listCellules[10].voisinsNeut)
     
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
