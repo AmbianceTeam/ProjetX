@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from AmbianceTeam import *
-from recup_terrain import *
 from tkinter import *
 
 def dessiner_terrain(c,Graphe):                                                 # c est un objet de type Canvas
@@ -8,13 +6,16 @@ def dessiner_terrain(c,Graphe):                                                 
     listLignes = Graphe.listLignes
     listInfoTerrain = Graphe.listInfoTerrain
     listCouleurs=["#4628DC","#C82525","#D0D0D0"]
+
     
-    offsetX = 50 # valeur de décalage en X
-    offsetY = 50 # valeur de décalage en Y
-    scaleX = 30 # agrandissement du plateau en X
-    scaleY = 30 # agrandissement du plateau en Y
     
-    c.create_rectangle(0 , 0 , 1000 , 500 , fill="#13084E") # Fond de la fenetre
+    offsetX = 100 # valeur de décalage en X
+    offsetY = 100 # valeur de décalage en Y
+    scaleX = (1/25) # agrandissement du plateau en X
+    scaleY = (1/25) # agrandissement du plateau en Y
+    
+    c.create_rectangle(0 , 0 , 1000 , 800 , fill="#13084E") # Fond de la fenetre
+    c.create_text(35,20,text="couleur bot: "+str(listInfoTerrain[2]),fill=listCouleurs[listInfoTerrain[2]],anchor="n")   # titre de la fentre (couleur du bot)
 
     #w.create_circle_arc(100, 120, 48, fill="green", outline="", start=275, end=305)
     #w.create_circle_arc(100, 120, 60, style="arc", outline="white", width=6, start=270-25, end=270+25)
@@ -29,7 +30,6 @@ def dessiner_terrain(c,Graphe):                                                 
         c.create_line(listLignes[j].Cell1.x*scaleX+offsetX , listLignes[j].Cell1.y*scaleY+offsetY , listLignes[j].Cell2.x*scaleX+offsetX , listLignes[j].Cell2.y*scaleY+offsetY , fill=couleurLigne,width=3)
 
     for i in range (listInfoTerrain[4]): # dessin des cellules
-        print('here')
         c.create_circle(listCellules[i].x*scaleX+offsetX, listCellules[i].y*scaleY+offsetY, (listCellules[i].radius)/4, fill=listCouleurs[listCellules[i].couleur], outline="#FCFCFC", width=2)
         c.create_text(listCellules[i].x*scaleX+offsetX,listCellules[i].y*scaleY+offsetY,text=str(listCellules[i].nboff),fill="white",anchor="s")
         c.create_text(listCellules[i].x*scaleX+offsetX,listCellules[i].y*scaleY+offsetY,text="I"*listCellules[i].prod,fill="white",anchor="n")
