@@ -484,7 +484,7 @@ def play_pooo():
                     
                         logging.info('ligneEnem trouvé ? {} | ID Cell Cible {} | ID Cell ennemie {} | nbEnem : {} | '.format(ligneEnem,cible.idcell,cible.voisinsEnem[j].idcell,nbEnem))
                         
-                    nbRest = abs((cible.nboff + cible.nbdef) - nbEnem)                                 # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront    
+                    nbRest = abs((cible.nboff + cible.nbdef) - nbEnem)                               # On calcule le nombre d'unités qu'il y aura sur la cellule quand les unités ennemies arriveront    
                     logging.info('nbrest  =  {}'.format(nbRest))
                     
                     # Si le nombre d'unités alliés est supérieure au nombre d'unités restants sur la cellule cible
@@ -501,25 +501,6 @@ def play_pooo():
                     
                     
                     
-            
-            if Map.cellAlly[i].voisinsEnem != [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il y a des ennemis autour de la cellule et qu'il y a des voisins neutres
-                cible = Map.cellAlly[i].voisinsNeut[0]
-                if Map.cellAlly[i].voisinsNeut[0].voisinsEnem == [] :
-                    cible = Map.cellAlly[i].voisinsNeut[0]
-                    bestRatio = (Map.cellAlly[i].voisinsNeut[0].nbdef + Map.cellAlly[i].voisinsNeut[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[0].idcell).dist)/Map.cellAlly[i].voisinsNeut[0].prod
-                
-                for j in range(1,len(Map.cellAlly[i].voisinsNeut)) :
-                    ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod
-                    
-                    if Map.cellAlly[i].voisinsNeut[j].voisinsEnem == [] and ratioCourant < bestRatio :
-                        cible = Map.cellAlly[i].voisinsNeut[j]
-                        bestRatio = ratioCourant
-                        
-            
-                
-                if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff and cible.voisinsEnem == [] :
-                    mv = setmove(userid,100,Map.cellAlly[i],cible)            
-                    poooc.order(mv)
                     
                     
                 
@@ -596,17 +577,19 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
 
 def main() :
     
-    init_string = "INIT5be38d52-0fe4-46fc-816f-f9eb69a4fd8bTO2[1];2;9CELLS:0(0,0)'100'20'8'I,1(5000,0)'100'20'8'I,2(10000,0)'200'30'8'II,3(0,5000)'100'20'8'I,4(5000,5000)'300'40'8'III,5(10000,5000)'100'20'8'I,6(0,10000)'200'30'8'II,7(5000,10000)'100'20'8'I,8(10000,10000)'100'20'8'I;14LINES:0@4800OF1,0@4800OF3,1@4600OF4,1@4700OF2,1@6871OF5,1@6871OF3,3@4600OF4,3@6871OF7,4@4600OF7,4@4600OF5,5@4800OF8,5@6871OF7,6@4700OF7,7@4800OF8"
+    init_string = "INITe6618100-b23b-44d6-8a3e-e9dcd43fe7aeTO2[0];2;7CELLS:0(0,0)'100'20'8'I,1(5000,0)'200'30'8'II,2(2500,5000)'100'20'8'I,3(5000,5000)'300'40'8'III,4(7500,5000)'100'20'8'I,5(5000,10000)'200'30'8'II,6(10000,10000)'100'20'8'I;8LINES:0@5390OF2,1@5290OF4,1@5290OF2,1@4500OF3,2@5290OF5,3@4500OF5,4@5390OF6,4@5290OF5"
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
 
     state_str = "STATE92352897-2119-4c57-b26d-44ec48982006IS2;7CELLS:0[0]5'0,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]5'0;0MOVES"
-    state_str2= "STATE9e8b1cb9-7306-4996-b4ca-030452d73a92IS2;9CELLS:0[0]2'8,1[0]4'8,2[-1]9'0,3[1]2'1,4[-1]12'0,5[0]2'1,6[-1]9'0,7[1]4'8,8[1]2'8;2MOVES:0>5[0]@4339979580'1,7<5[1]@4339979579'8"
+    state_str2= "STATE06783b64-8526-4dd1-b799-fd27bb3be4a7IS2;7CELLS:0[0]20'8,1[0]30'8,2[0]20'8,3[-1]12'0,4[1]18'8,5[0]8'5,6[1]4'8;0MOVES"
     decrypt_state(Map,state_str2)
     
     uid = "blablacar"
     register_pooo(uid)
     
-    print(Map.listCellules[0].voisinsEnem)
+    print(Map.cellAlly[1].nboff == Map.cellAlly[1].offsize)
+    print(Map.cellAlly[1].idcell)
+    print(Map.cellAlly[1].voisinsEnem)
     
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
