@@ -503,19 +503,22 @@ def play_pooo():
                     
             
             if Map.cellAlly[i].voisinsEnem != [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il y a des ennemis autour de la cellule et qu'il y a des voisins neutres
-                cible = Map.cellAlly[i].voisinsNeut[0]
-                if Map.cellAlly[i].voisinsNeut[0].voisinsEnem == [] :
-                    cible = Map.cellAlly[i].voisinsNeut[0]
-                    bestRatio = (Map.cellAlly[i].voisinsNeut[0].nbdef + Map.cellAlly[i].voisinsNeut[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[0].idcell).dist)/Map.cellAlly[i].voisinsNeut[0].prod
                 
-                for j in range(1,len(Map.cellAlly[i].voisinsNeut)) :
+                cible = Map.cellAlly[i].voisinsNeut[0]
+                bestRatio = 100000
+                
+                
+                for j in range(len(Map.cellAlly[i].voisinsNeut)) :
+                    #logging.info('On regarde la cellule_______{}'.format(Map.cellAlly[i].voisinsNeut[j].idcell))
                     ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod
                     
                     if Map.cellAlly[i].voisinsNeut[j].voisinsEnem == [] and ratioCourant < bestRatio :
                         cible = Map.cellAlly[i].voisinsNeut[j]
                         bestRatio = ratioCourant
-                        
-            
+                    #logging.info('La cible est la cellule {}'.format(cible.idcell))
+                    
+                    
+                
                 
                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff and cible.voisinsEnem == [] :
                     mv = setmove(userid,100,Map.cellAlly[i],cible)            
