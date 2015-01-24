@@ -420,10 +420,6 @@ def play_pooo():
     # Mise à jour de la Map :
     decrypt_state(Map,state)
     
-    #####A mettre en commentaire lors des tests sur Cloud9#####
-    """
-    dessiner_terrain(newGUIThread.window.canvas,Map)"""
-    ###########################################################
     
     '''for i in range(len(Map.cellAlly)):
         poooc.order(setmove(userid,100,Map.cellAlly[i],Map.cellAlly[i].voisinsNeut[0]))'''
@@ -431,6 +427,10 @@ def play_pooo():
         poooc.order(setmove(userid,100,Map.listCellules[0],Map.listCellules[1]))'''
     ####### IA ########*
     while True :
+        #####A mettre en commentaire lors des tests sur Cloud9#####
+        """
+        dessiner_terrain(newGUIThread.window.canvas,Map)"""
+        ###########################################################
         state = poooc.state_on_update()
         decrypt_state(Map,state)
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
