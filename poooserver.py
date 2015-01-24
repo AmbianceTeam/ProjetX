@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(description='Pooo game server', epilog='Example
 parser.add_argument('-P','--port', type=int, default=9876, help='port number of the Pooo server (Default: 9876)')
 parser.add_argument('-B','--bufsize', type=int, choices=[1024, 2048, 4096], default=2048, help='size of the socket buffer (Default: 2048)')
 parser.add_argument('-s','--speed', type=int, choices=[1, 2, 4], default=1, help='speed of the game (Default: 1)')
-parser.add_argument('-r','--roomsize', type=int, default=4, help='size of the room (Default: 4, accepted values: 2+)')
+parser.add_argument('-r','--roomsize', type=int, default=2, help='size of the room (Default: 4, accepted values: 2+)')
 parser.add_argument('-g','--gui', help='address (IP:Port) of the GUI if any')
 #parser.add_argument('-M','--matchsize', type=int, default=2, help='number of bots in a match (Default: 2, accepted values: 2)')
 

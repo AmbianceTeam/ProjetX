@@ -20,9 +20,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 parser = argparse.ArgumentParser(description='Client for Pooo game', epilog='Example: $pooobot.py -h 192.168.10.4:9876 -b lollipooo Alice')
-parser.add_argument('-s','--server', required=True, help='address formatted as host:port of the Pooo server')
-parser.add_argument('-b','--bot', required=True, help='module name of the bot')
-parser.add_argument('player', help='name of the player')
+parser.add_argument('-s','--server', default='localhost:9876', help='address formatted as host:port of the Pooo server')
+parser.add_argument('-b','--bot', default="AmbianceTeam", help='module name of the bot')
+parser.add_argument('player', default="Elou" ,help='name of the player')
 
 # args.server et args.player
 args = parser.parse_args()
