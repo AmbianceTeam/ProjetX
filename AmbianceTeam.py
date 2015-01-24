@@ -536,9 +536,14 @@ def play_pooo():
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut == [] and Map.cellAlly[i].voisinsAlly != [] :    #Si la cellule courante est entourés d'alliés
                 danger = 0
                 cible2 = ''
+                attentestrat = 0                                        
+                
+                
+            
                 for j in range(len(Map.cellAlly[i].voisinsAlly)):                                                               #On parcourt la liste des voisins de cette cellules
-                    
-                    
+                    #if len(Map.cellAlly[i].voisinsAlly) == 1:                                                                   #S'il n'y a qu'une seule cellule alliée en voisinage alors on lui envoie automatiquement les unités
+                    #    cible2 = Map.cellAlly[i].voisinsAlly[0]
+                
                     if Map.cellAlly[i].voisinsAlly[j].voisinsEnem != [] :                                                       #Si une des cellules voisines est proche d'un ennemi, on lui enverra les unités en priorité (d'où le danger = 1)
                         #logging.info('condition 1')
                         danger = 1
@@ -546,14 +551,15 @@ def play_pooo():
                         #logging.info('cible2 : _____ {} et Cellule depart : _____ {}'.format(cible2.idcell,Map.cellAlly[i].idcell))
                     elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :                                     #Si il n'y a pas de danger et qu'une cellule voisine a une cellule neutre à portée, on lui envoie les units
                         #logging.info('condition 2')
+                        attentestrat = 1
                         cible2 = Map.cellAlly[i].voisinsAlly[j]     
                     
                         
-                if Map.cellAlly[i].nboff >= 2 and cible2 != '' :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
+                if Map.cellAlly[i].nboff >= 2 and cible2 != '' and attentestrat == 0 :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
-        
-            
-            
+                
+                elif Map.cellAlly[i].nboff >= 5 and cible2 != '' and attentestrat == 1 :                                                                #Quand il y a des cells neutres à coté de la cible on préférera retarder un peu l'envoi pour éviter que l'ennemi ne nous reprenne la cellule derriere
+                    poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
             
             
                 # /!\  PHASE 3 : CONQUETE CELLULES ENNEMIES  /!\
@@ -572,7 +578,7 @@ def play_pooo():
                         logging.info('bestRatio: {}'.format(bestRatio))
                         cible = Map.cellAlly[i].voisinsEnem[j]
                         
-                if ((cible.nboff + cible.nbdef + 3) < Map.cellAlly[i].nboff and cible.prod < Map.cellAlly[i].prod) :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
+                if (cible.nboff + cible.nbdef + 3) < Map.cellAlly[i].nboff :                            #Du coup dès que notre cellule a assez d'unités on envoie pour conquérir la cellule cible
                     logging.info('condition____________________ ennemi 1')
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)

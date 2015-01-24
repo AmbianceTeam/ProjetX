@@ -1,8 +1,9 @@
 ProjetX
 =======
-Map testées : (AmbianceTeam VS VieuxSac -> win de AmbianceTeam)
-1, 2, 3, 4, 5, 6, 7, 8
+Map testées : (AmbianceTeam VS VieuxSac)
+ 2, 3, 4, 5, 6, 7, 8
+
+Sur la map 1, la vieille IA gagne
+Sur la 7, la vieille gagne à peu près 1 fois sur 2
 
 
-
-A faire : Quand une cellule alliée possède 1 SEUL voisin allié, faire en sorte de transférer les unités
