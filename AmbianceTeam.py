@@ -5,7 +5,7 @@ import poooc
 
 
 #####A mettre en commentaire lors des tests sur Cloud9#####
-import tkinter 
+"""import tkinter 
 from interface_graphique import dessiner_terrain
 import threading
 
@@ -40,7 +40,7 @@ class GUIInterface(tkinter.Tk):
 
 
 global newGUIThread; newGUIThread = GUIThread()
-newGUIThread.start()
+newGUIThread.start()"""
 ###########################################################
 
 # Définition de la classe Cellule
@@ -508,8 +508,8 @@ def play_pooo():
     ####### IA ########*
     while True :
         #####A mettre en commentaire lors des tests sur Cloud9#####
-        
-        dessiner_terrain(newGUIThread.window.canvas,Map)
+        """
+        dessiner_terrain(newGUIThread.window.canvas,Map)"""
         ###########################################################
         state = poooc.state_on_update()
         decrypt_state(Map,state)
