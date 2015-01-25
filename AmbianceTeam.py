@@ -5,7 +5,7 @@ import poooc
 
 
 #####A mettre en commentaire lors des tests sur Cloud9#####
-"""import tkinter 
+import tkinter 
 from interface_graphique import dessiner_terrain
 import threading
 
@@ -40,7 +40,7 @@ class GUIInterface(tkinter.Tk):
 
 
 global newGUIThread; newGUIThread = GUIThread()
-newGUIThread.start()"""
+newGUIThread.start()
 ###########################################################
 
 # Définition de la classe Cellule
@@ -290,7 +290,8 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
         listPred.append(0) #liste des prédessesseur  [0,0,0,0,0,0,0....]
         if Map.cellAlly[i]==CellD: #récupération de l'indice local de CellDestination
             indiceDest = i
-            
+			#logging.info('#########___________INDICE DEST INITIALISE___________##################')
+        
         if Map.cellAlly[i]==CellS: #récupération de l'indice local de CellSource 
             indiceSource = i
             
@@ -338,7 +339,7 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
 def lenChemin(chemin):                                                          # Calcule la longueur d'un chemin 
     lenC = 0
     for i in range(len(chemin)-1):
-        lenC = lenC + ligne(Map,chemin[i].idcell,chemin[i+1].idcell)
+        lenC = lenC + ligne(Map,chemin[i].idcell,chemin[i+1].idcell).dist
     return lenC
     
 def fillRedirection(chemin):                                                    # Met à jour les redirections des cellules
@@ -507,8 +508,8 @@ def play_pooo():
     ####### IA ########*
     while True :
         #####A mettre en commentaire lors des tests sur Cloud9#####
-        """
-        dessiner_terrain(newGUIThread.window.canvas,Map)"""
+        
+        dessiner_terrain(newGUIThread.window.canvas,Map)
         ###########################################################
         state = poooc.state_on_update()
         decrypt_state(Map,state)
@@ -639,7 +640,8 @@ def play_pooo():
                 
             
                 for j in range(len(Map.cellAlly[i].voisinsAlly)):                                                               #On parcourt la liste des voisins de cette cellules
-                    #if len(Map.cellAlly[i].voisinsAlly) == 1:                                                                   #S'il n'y a qu'une seule cellule alliée en voisinage alors on lui envoie automatiquement les unités
+                    #logging.info('c1 :{}  c2 :{} c3 :{}'.format(Map.cellAlly[i].voisinsAlly[j].voisinsNeut == [],Map.cellFront != [],Map.cellFront != lastcellFront))
+					#if len(Map.cellAlly[i].voisinsAlly) == 1:                                                                   #S'il n'y a qu'une seule cellule alliée en voisinage alors on lui envoie automatiquement les unités
                     #    cible2 = Map.cellAlly[i].voisinsAlly[0]
                 
                     if Map.cellAlly[i].voisinsAlly[j].voisinsEnem != [] :                                                       #Si une des cellules voisines est proche d'un ennemi, on lui enverra les unités en priorité (d'où le danger = 1)
@@ -653,17 +655,18 @@ def play_pooo():
                         attentestrat = 1
                         cible2 = Map.cellAlly[i].voisinsAlly[j] 
                     
-                    elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut == [] and Map.cellFront != ([] and lastcellFront):                                                      # Sinon, on doit faire une redirection d'unités vers les celulles qui ont des ennemis dans leur voisins
-
+					
+                    elif Map.cellFront != ([] and lastcellFront):                                                      # Sinon, on doit faire une redirection d'unités vers les celulles qui ont des ennemis dans leur voisins
+                        #logging.info('condition____________________ REDIRECTION')
                             
-                        for j in range(len(Map.cellFront)):                     # recherche de la cellule du front le plus proche (à changer peut petre. idée : regarder la cellule du front qui a besoin du plus d'aide)
-                            cheminCourant = dijkstra(Map.cellAlly[i],Map.cellFront[j])
+                        for k in range(len(Map.cellFront)):                     # recherche de la cellule du front le plus proche (à changer peut petre. idée : regarder la cellule du front qui a besoin du plus d'aide)
+                            cheminCourant = dijkstra(Map.cellAlly[i],Map.cellFront[k][0])
                             distCourante = lenChemin(cheminCourant) # distance du chemin 
                             if( distCourante < distMinFront):
                                 distMinFront = distCourante
                                 cheminPlusCourt = cheminCourant
-                                cible3 = Map.cellFront[j]
-                        logging.info('FILL_____REDIRECTIONS')
+                                cible3 = Map.cellFront[k][0]
+                        #logging.info('FILL_____REDIRECTIONS ___________________________######################')
                         fillRedirection(cheminPlusCourt)
                 
                       
