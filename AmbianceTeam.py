@@ -48,7 +48,7 @@ class Cellule:
     
     
     # Fonction d'initialisation
-    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=-1,voisinsAlly = [], voisinsEnem = [], voisinsNeut = []): #-1 pour le neutre
+    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=-1,voisinsAlly = [], voisinsEnem = [], voisinsNeut = [], redirection = 0): #-1 pour le neutre
         
         self.idcell = idcell                      # Initialisation de l'id de la cellule Type : entier
         self.offsize = offsize                    # Initialisation de la capacité offensive de la cellule Type : entier
@@ -59,11 +59,12 @@ class Cellule:
         self.prod = prod                          # Initialisation de la production d'unités de la cellule. Type : entier
         self.nboff = nboff                        # Initialisation du nombre d'unités offensives présentes dans la cellule. Type : entier 
         self.nbdef = nbdef                        # Initialisation du nombre d'unités défensives présentes dans la cellule. Type : entier
-        self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, 0 -> Neutre, sinon elle appartient à quelqu'un. Type : entier
+        self.couleur = couleur                    # Initialisation de la couleur de la cellule càd à qui elle appartient, -1 -> Neutre, sinon elle appartient à quelqu'un. Type : entier
         self.voisins = []                         # Initialisation du tableau contenant les voisins de la cellule. Type : tuple (objet Ligne,objet Cellule correspondant)
         self.voisinsAlly = voisinsAlly
         self.voisinsEnem = voisinsEnem
         self.voisinsNeut = voisinsNeut
+        self.redirection = redirection            # Initialisation de la Cellule vers laquelle doivent être redirigées les unités produites. Egale à 0 si aucune redirection doit être effectuée
 
         
     
@@ -84,13 +85,14 @@ class Ligne:
 
 class Graphe:
     
-    def __init__(self,listCellules,listLignes,listInfoTerrain, cellAlly = [], cellEnem = [], cellNeut = []):
+    def __init__(self,listCellules,listLignes,listInfoTerrain, cellAlly = [], cellEnem = [], cellNeut = [], cellFront = []):
         self.listCellules = listCellules
         self.listLignes = listLignes
         self.listInfoTerrain = listInfoTerrain                          # liste contenant : match_id, nb_players, no_color, speed, nb_cells, nb_lines
         self.cellAlly = cellAlly                                        # liste contenant les objets Cellule alliés
         self.cellEnem = cellEnem                                        # liste contenant les objets Cellule Ennemis
         self.cellNeut = cellNeut                                        # liste contenant les objets Cellule neutres
+        self.cellFront = cellFront                                      # liste contenant les objets Cellule qui ont au moins un ennemi dans leurs voisins (Cellules du front)
 
 
 """Robot-joueur de Pooo
@@ -320,9 +322,8 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
         listAExplorer.remove([pivot,listDist[pivot][0]]) # on enleve le pivot de la listAExplorer
         #print('listAExplorer __: ')
         #print(listAExplorer)
+        
     indice=indiceDest #indice de la cellule de destination dans la liste des cellules Alliées
-    
-    print(listPred)
     for l in range(len(listPred)):
         indice = listPred[indice]
         if(indice == indiceSource):                                             # Si on trouve l'indice source , on arrete la boucle 
@@ -342,6 +343,7 @@ def decrypt_state(graph,state_str):                                             
     graph.cellAlly = []                                                         # Réinit des listes de cellules (alliées, ennemies et neutres)
     graph.cellEnem = []
     graph.cellNeut = []
+    graph.cellFront = []
 
     
     """regex1 = re.compile('STATE[A-Za-z0-9-]+IS')                                 #Recupération de l'id du match
@@ -408,7 +410,11 @@ def decrypt_state(graph,state_str):                                             
                 graph.listCellules[i].voisinsAlly.append(graph.listCellules[i].voisins[j][1])
                 
             elif graph.listCellules[i].voisins[j][1].couleur != int(-1) and graph.listCellules[i].voisins[j][1].couleur != graph.listInfoTerrain[2] :
-                graph.listCellules[i].voisinsEnem.append(graph.listCellules[i].voisins[j][1])       
+                graph.listCellules[i].voisinsEnem.append(graph.listCellules[i].voisins[j][1])  
+    
+    for i in range(nb_cells):                                                   # Remplissage des cellules du Front 
+        if len(graph.listCellules[i].voisinsEnem) != 0 and graph.listCellules[i].couleur==graph.listInfoTerrain[2]: # Si la cellule a des voisins ennemis et que c'est une cellule alliée alors elle fait partie du front
+            graph.cellFront.append((graph.listCellules[i],graph.listCellules[i].idcell))
     
     for i in range(len(graph.listLignes)):
         graph.listLignes[i].nbunitfrom2 = []                                    #Réinitialisation des listes comportant les infos sur les unités en mvt sur chaque ligne
@@ -622,10 +628,13 @@ def play_pooo():
                     elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :                                     #Si il n'y a pas de danger et qu'une cellule voisine a une cellule neutre à portée, on lui envoie les units
                         #logging.info('condition 2')
                         attentestrat = 1
-                        cible2 = Map.cellAlly[i].voisinsAlly[j]     
+                        cible2 = Map.cellAlly[i].voisinsAlly[j] 
+                    
+                    elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut == []:                                                      # Sinon, on doit faire une redirection d'unités vers les celulles qui ont des ennemis dans leur voisins
+                        pass
                     
                         
-                if Map.cellAlly[i].nboff >= 2 and cible2 != '' and attentestrat == 0 :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 5 (sinon ça plante)
+                if Map.cellAlly[i].nboff >= 2 and cible2 != '' and attentestrat == 0 :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 2 (sinon ça plante)
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
                 
                 elif Map.cellAlly[i].nboff >= 5 and cible2 != '' and attentestrat == 1 :                                                                #Quand il y a des cells neutres à coté de la cible on préférera retarder un peu l'envoi pour éviter que l'ennemi ne nous reprenne la cellule derriere
@@ -686,14 +695,16 @@ def main() :
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
 
     state_str = "STATE92352897-2119-4c57-b26d-44ec48982006IS2;7CELLS:0[0]5'0,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]5'0;0MOVES"
-    state_str2= "STATE6c78da94-1d8a-45bf-aa3b-3dce9a275ce1IS2;11CELLS:0[0]2'8,1[0]2'8,2[0]1'4,3[-1]6'0,4[-1]6'0,5[0]4'0,6[1]2'4,7[-1]6'0,8[1]1'0,9[1]2'8,10[1]2'8;2MOVES:0>7[0]@4349032374'4,8<7[1]@4349032375'10"
+    state_str2= "STATE6c78da94-1d8a-45bf-aa3b-3dce9a275ce1IS2;11CELLS:0[0]2'8,1[0]2'8,2[0]1'4,3[1]6'0,4[-1]6'0,5[1]4'0,6[1]2'4,7[-1]6'0,8[1]1'0,9[1]2'8,10[1]2'8;2MOVES:0>7[0]@4349032374'4,8<7[1]@4349032375'10"
     decrypt_state(Map,state_str2)
     
     uid = "blablacar"
     register_pooo(uid)
     
-    print(Map.listCellules[10].voisinsNeut)
-    print(dijkstra(Map.listCellules[10],Map.listCellules[8]))
+    #print(Map.listCellules[10].voisinsNeut)
+    #print(dijkstra(Map.listCellules[10],Map.listCellules[5]))
+    print(Map.listCellules[7].voisinsEnem)
+    print(Map.cellFront)
     
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
