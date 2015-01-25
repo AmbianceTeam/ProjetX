@@ -31,7 +31,7 @@ class GUIInterface(tkinter.Tk):
         tkinter.Tk.__init__(self)
         self.title("Interface Graphique AmbianceTeam")
  
-        self.canvas = tkinter.Canvas(self , width=1000, height =500) # Création d'un Canvas à partir de la fenetre "window"
+        self.canvas = tkinter.Canvas(self , width=800, height =800) # Création d'un Canvas à partir de la fenetre "window"
         self.canvas.pack()
  
     def exit(self):
