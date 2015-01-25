@@ -584,7 +584,7 @@ def play_pooo():
                     
                     # Si le nombre d'unités alliés est supérieure au nombre d'unités restants sur la cellule cible
                     
-                    if nbRest < Map.cellAlly[i].nboff:                     
+                    if (nbRest+2) < Map.cellAlly[i].nboff:                     
                         mv = setmove(userid,100,Map.cellAlly[i],cible)          # On envoie nos unités sur la cellule, pour la conquérir
                         poooc.order(mv)
                         
