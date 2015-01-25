@@ -92,7 +92,7 @@ class Graphe:
         self.cellAlly = cellAlly                                        # liste contenant les objets Cellule alliés
         self.cellEnem = cellEnem                                        # liste contenant les objets Cellule Ennemis
         self.cellNeut = cellNeut                                        # liste contenant les objets Cellule neutres
-        self.cellFront = cellFront                                      # liste contenant les objets Cellule qui ont au moins un ennemi dans leurs voisins (Cellules du front)
+        self.cellFront = cellFront                                      # liste contenant les objets Cellule qui ont au moins un ennemi dans leurs voisins (Cellules du front). ( [Cellule,idcell], ...)
 
 
 """Robot-joueur de Pooo
@@ -335,7 +335,19 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
     chemin.append(listDist[indiceDest][0])
     return chemin
     
-
+def lenChemin(chemin):                                                          # Calcule la longueur d'un chemin 
+    lenC = 0
+    for i in range(len(chemin)-1):
+        lenC = lenC + ligne(Map,chemin[i].idcell,chemin[i+1].idcell)
+    return lenC
+    
+def fillRedirection(chemin):                                                    # Met à jour les redirections des cellules
+    for i in range(len(chemin)-1):
+        if(chemin[i].redirection == 0):
+            chemin[i].redirection = chemin[i+1]
+            
+            
+    
 
 
 def decrypt_state(graph,state_str):                                                       #Fonction de traitement de state
@@ -486,7 +498,7 @@ def play_pooo():
     state = poooc.state_on_update()
     # Mise à jour de la Map :
     decrypt_state(Map,state)
-    
+    lastcellFront = []
     
     '''for i in range(len(Map.cellAlly)):
         poooc.order(setmove(userid,100,Map.cellAlly[i],Map.cellAlly[i].voisinsNeut[0]))'''
@@ -500,6 +512,13 @@ def play_pooo():
         ###########################################################
         state = poooc.state_on_update()
         decrypt_state(Map,state)
+        
+        if(Map.cellFront != lastcellFront):                                     # Réinitialisation des redirections de toutes les cellules
+            logging.info('----Réinitialisation des REDIRECTIONS------')
+            for k in range(len(Map.listCellules)):
+                Map.listCellules[k].redirection = 0
+                
+        
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
 
             prodmax = 0
@@ -611,7 +630,11 @@ def play_pooo():
             if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut == [] and Map.cellAlly[i].voisinsAlly != [] :    #Si la cellule courante est entourés d'alliés
                 danger = 0
                 cible2 = ''
-                attentestrat = 0                                        
+                cible3 = ''
+                attentestrat = 0
+                distMinFront = 2147483647
+                cheminPlusCourt = 0
+                
                 
                 
             
@@ -630,8 +653,20 @@ def play_pooo():
                         attentestrat = 1
                         cible2 = Map.cellAlly[i].voisinsAlly[j] 
                     
-                    elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut == []:                                                      # Sinon, on doit faire une redirection d'unités vers les celulles qui ont des ennemis dans leur voisins
-                        pass
+                    elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut == [] and Map.cellFront != ([] and lastcellFront):                                                      # Sinon, on doit faire une redirection d'unités vers les celulles qui ont des ennemis dans leur voisins
+
+                            
+                        for j in range(len(Map.cellFront)):                     # recherche de la cellule du front le plus proche (à changer peut petre. idée : regarder la cellule du front qui a besoin du plus d'aide)
+                            cheminCourant = dijkstra(Map.cellAlly[i],Map.cellFront[j])
+                            distCourante = lenChemin(cheminCourant) # distance du chemin 
+                            if( distCourante < distMinFront):
+                                distMinFront = distCourante
+                                cheminPlusCourt = cheminCourant
+                                cible3 = Map.cellFront[j]
+                        logging.info('FILL_____REDIRECTIONS')
+                        fillRedirection(cheminPlusCourt)
+                
+                      
                     
                         
                 if Map.cellAlly[i].nboff >= 2 and cible2 != '' and attentestrat == 0 :                                                                     #Pour éviter de surcharger le serv, on fait transiter les unités par paquets de 2 (sinon ça plante)
@@ -639,6 +674,8 @@ def play_pooo():
                 
                 elif Map.cellAlly[i].nboff >= 5 and cible2 != '' and attentestrat == 1 :                                                                #Quand il y a des cells neutres à coté de la cible on préférera retarder un peu l'envoi pour éviter que l'ennemi ne nous reprenne la cellule derriere
                     poooc.order(setmove(userid,100,Map.cellAlly[i],cible2))
+                
+
             
             
                 # /!\  PHASE 3 : CONQUETE CELLULES ENNEMIES  /!\
@@ -672,9 +709,16 @@ def play_pooo():
                     logging.info('condition____________________ ennemi 2')
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
-                
-                    
-                
+        
+        
+        ##### REDIRECTION DES UNITES #####        
+        for l in range(len(Map.listCellules)):                                  # Redirection des unités                                                            
+            if(Map.listCellules[l].redirection != 0 and Map.listCellules[l].nboff >= 2):
+                logging.info('redirection____________________ vers ID {}'.format(Map.listCellules[l].redirection.idcell))
+                poooc.order(setmove(userid,100,Map.listCellules[l],Map.listCellules[l].redirection))
+        
+        
+        lastcellFront = Map.cellFront   # Maj de lastcellFront (une fois qu'on a rempli les redirections des cellules avec fillRedirection()        
                 
         ####### FIN IA ########
         
