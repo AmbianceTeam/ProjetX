@@ -686,7 +686,7 @@ def play_pooo():
             
             
             
-            if Map.cellAlly[i].voisinsEnem != [] :
+            if Map.cellAlly[i].voisinsEnem != []  and Map.cellAlly[i].voisinsNeut == []: # On n'attaque pas tant qu'il y a une cellule neutre dans les voisins (favorise la prise de cellule neutre)
                 #logging.info('Une cellule Ally a un ennemi')
                 cible = Map.cellAlly[i].voisinsEnem[0]
                 bestRatio = (Map.cellAlly[i].voisinsEnem[0].nbdef + Map.cellAlly[i].voisinsEnem[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[0].idcell).dist)/Map.cellAlly[i].voisinsEnem[0].prod
