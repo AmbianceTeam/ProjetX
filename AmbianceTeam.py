@@ -526,19 +526,27 @@ def play_pooo():
                 # Si jamais la cellule neutre qui nous intéresse à un ennemi dans ses voisins
                 
                 if cible.voisinsEnem != []:
+                   
                     nbEnem = 0
+                   
                     for j in range(len(cible.voisinsEnem)):
+                   
                         ligneEnem = ligne(Map, cible.idcell, cible.voisinsEnem[j].idcell)       # On récupère la ligne qui relie la cible à la cellule ennemie 
+                   
                         if (ligneEnem.Cell1.idcell==cible.idcell):                   #Alors les unités ennemies viennent de unitfrom2
                             logging.info('condition______________________ 1')
+                   
                             for k in range(len(ligneEnem.nbunitfrom2)):         #On parcourt les différents paquets d'unités circulant de 2 vers 1 
+                   
                                 if(ligneEnem.nbunitfrom2[k][1] != Map.listInfoTerrain[2]): # On vérifie qu'il s'agit d'un paquet ennemi
                                     logging.info('nbunitfrom2[k]: _______________ {}'.format(ligneEnem.nbunitfrom2[k]))
                                     nbEnem = nbEnem + ligneEnem.nbunitfrom2[k][0]
                         
                         elif(ligneEnem.Cell1.idcell==cible.voisinsEnem[j].idcell):   #Alors les unités ennemies viennent de unitfrom1
                             logging.info('condition______________________ 2')
+                   
                             for k in range(len(ligneEnem.nbunitfrom1)):         #On parcourt les différents paquets d'unités circulant de 1 vers 2
+                   
                                 if(ligneEnem.nbunitfrom1[k][1] != Map.listInfoTerrain[2]): # On vérifie qu'il s'agit d'un paquet ennemi
                                     logging.info('nbunitfrom1[k]: _______________ {}'.format(ligneEnem.nbunitfrom1[k]))
                                     nbEnem = nbEnem + ligneEnem.nbunitfrom1[k][0]
@@ -610,6 +618,7 @@ def play_pooo():
                         danger = 1
                         cible2 = Map.cellAlly[i].voisinsAlly[j]
                         #logging.info('cible2 : _____ {} et Cellule depart : _____ {}'.format(cible2.idcell,Map.cellAlly[i].idcell))
+                    
                     elif Map.cellAlly[i].voisinsAlly[j].voisinsNeut != [] and danger == 0 :                                     #Si il n'y a pas de danger et qu'une cellule voisine a une cellule neutre à portée, on lui envoie les units
                         #logging.info('condition 2')
                         attentestrat = 1
@@ -632,8 +641,13 @@ def play_pooo():
                 #logging.info('Une cellule Ally a un ennemi')
                 cible = Map.cellAlly[i].voisinsEnem[0]
                 bestRatio = (Map.cellAlly[i].voisinsEnem[0].nbdef + Map.cellAlly[i].voisinsEnem[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[0].idcell).dist)/Map.cellAlly[i].voisinsEnem[0].prod
+               
+               
+               
                 for j in range(len(Map.cellAlly[i].voisinsEnem)) :
+                    
                     ratioCourant = (Map.cellAlly[i].voisinsEnem[j].nbdef + Map.cellAlly[i].voisinsEnem[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsEnem[j].idcell).dist)/Map.cellAlly[i].voisinsEnem[j].prod
+                    
                     if (ratioCourant < bestRatio) :           #Ne prend pas en compte les unités ennemies présentent sur la ligne (à corriger donc) + les unités que l'ennemi aura produit le temps du déplacement des unités alliées 
                         bestRatio = ratioCourant                           
                         logging.info('bestRatio: {}'.format(bestRatio))
