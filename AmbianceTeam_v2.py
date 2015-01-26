@@ -48,7 +48,7 @@ class Cellule:
     
     
     # Fonction d'initialisation
-    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=-1,voisinsAlly = [], voisinsEnem = [], voisinsNeut = [], redirection = 0): #-1 pour le neutre
+    def __init__(self,idcell,offsize,defsize,radius,x,y,prod=0,nboff=0,nbdef=0,couleur=-1,voisinsAlly = [], voisinsEnem = [], voisinsNeut = [], redirection = 0, priorite = [0.0,0.0]): #-1 pour le neutre
         
         self.idcell = idcell                      # Initialisation de l'id de la cellule Type : entier
         self.offsize = offsize                    # Initialisation de la capacité offensive de la cellule Type : entier
@@ -65,8 +65,8 @@ class Cellule:
         self.voisinsEnem = voisinsEnem
         self.voisinsNeut = voisinsNeut
         self.redirection = redirection            # Initialisation de la Cellule vers laquelle doivent être redirigées les unités produites. Egale à 0 si aucune redirection doit être effectuée
-
-        
+        self.priorite = priorite                  # Initialisation de la valeur priorité de la cellule. 0 pour les cellules autre que neutre, sinon tuple [priorité,état]. état = 1 après la 1ere pass, état = 2 après la deuxieme pass
+         
     
 # Définition de la classe Ligne
 class Ligne:
@@ -348,7 +348,28 @@ def fillRedirection(chemin):                                                    
             chemin[i].redirection = chemin[i+1]
             
             
+def fillPriorite():
+    # PREMIERE PASS , Remplissage avec les ratios
+    for i in range(len(Map.cellNeut)):
+        
+        Map.cellNeut[i].priorite = [(10*Map.cellNeut[i].prod/Map.cellNeut[i].nboff),0.0] # plus le ratio est grand , mieux c'est
+        #print('{} / {} = {}'.format(Map.cellNeut[i].prod,Map.cellNeut[i].nboff,Map.cellNeut[i].priorite[0]))
+        #print(Map.cellNeut[i].priorite)
+
+        
     
+    # DEUXIEME PASS ,  Remplissage avec la contribution des cellules neutres voisines
+    
+    for j in range(len(Map.cellNeut)):
+        contri = 0 
+        for k in range(len(Map.cellNeut[j].voisinsNeut)):
+            contri = contri + (Map.cellNeut[j].voisinsNeut[k].priorite[0]+ (1000/ligne(Map,Map.cellNeut[j].idcell,Map.cellNeut[j].voisinsNeut[k].idcell).dist))
+            #print('contri {}'.format(contri))
+            #print('k : '+str(Map.cellNeut[j].voisinsNeut[k].priorite[0]))
+
+        Map.cellNeut[j].priorite[1] = Map.cellNeut[j].priorite[0]*contri
+        #print('ID : {} Pri : {} * {} = {}'.format(Map.cellNeut[j].idcell,Map.cellNeut[j].priorite[0],contri,Map.cellNeut[j].priorite[1]))
+        
 
 
 def decrypt_state(graph,state_str):                                                       #Fonction de traitement de state
@@ -500,6 +521,7 @@ def play_pooo():
     # Mise à jour de la Map :
     decrypt_state(Map,state)
     lastcellFront = []
+    lastcellNeut = []
     
     '''for i in range(len(Map.cellAlly)):
         poooc.order(setmove(userid,100,Map.cellAlly[i],Map.cellAlly[i].voisinsNeut[0]))'''
@@ -519,6 +541,9 @@ def play_pooo():
             for k in range(len(Map.listCellules)):
                 Map.listCellules[k].redirection = 0
                 
+        if(Map.cellNeut != lastcellNeut):                                       # Si la liste des cellules neutres change, on recalcule les valeurs Priorite des cellules neutres
+            fillPriorite()
+            
         
         for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
 
@@ -537,13 +562,13 @@ def play_pooo():
                 
                 # Initialisation des variables cible et bestRatio, bestRatio correspondant à la cellule que l'on juge la plus intéressante ((nb unités nécessaire + dist)/prod), plus ce ratio est petit, mieux c'est 
                 cible = Map.cellAlly[i].voisinsNeut[0]
-                bestRatio = (Map.cellAlly[i].voisinsNeut[0].nbdef + Map.cellAlly[i].voisinsNeut[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[0].idcell).dist)/Map.cellAlly[i].voisinsNeut[0].prod
+                bestRatio = 0 #(Map.cellAlly[i].voisinsNeut[0].nbdef + Map.cellAlly[i].voisinsNeut[0].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[0].idcell).dist)/Map.cellAlly[i].voisinsNeut[0].prod
                 
                 for j in range(len(Map.cellAlly[i].voisinsNeut)) :                              #On parcourt les voisins neutres
                     
-                    ratioCourant = (Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod
+                    ratioCourant = Map.cellAlly[i].voisinsNeut[j].priorite[1] #(Map.cellAlly[i].voisinsNeut[j].nbdef + Map.cellAlly[i].voisinsNeut[j].nboff + ligne(Map,Map.cellAlly[i].idcell, Map.cellAlly[i].voisinsNeut[j].idcell).dist)/Map.cellAlly[i].voisinsNeut[j].prod
                     
-                    if ratioCourant < bestRatio :                                               #Et on choisit celle qui a le plus petit ratio (cellule la plus rentable) et elle devient la cible
+                    if ratioCourant > bestRatio :                                               #Et on choisit celle qui a le plus petit ratio (cellule la plus rentable) et elle devient la cible
                         bestRatio = ratioCourant  
                         cible = Map.cellAlly[i].voisinsNeut[j]
             
@@ -721,7 +746,8 @@ def play_pooo():
                 poooc.order(setmove(userid,100,Map.listCellules[l],Map.listCellules[l].redirection))
         
         
-        lastcellFront = Map.cellFront   # Maj de lastcellFront (une fois qu'on a rempli les redirections des cellules avec fillRedirection()        
+        lastcellFront = Map.cellFront   # Maj de lastcellFront (une fois qu'on a rempli les redirections des cellules avec fillRedirection()
+        lastcellNeut = Map.cellNeut # Maj lastcellNeut
                 
         ####### FIN IA ########
         
@@ -742,7 +768,7 @@ def main() :
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
 
     state_str = "STATE92352897-2119-4c57-b26d-44ec48982006IS2;7CELLS:0[0]5'0,1[-1]6'0,2[-1]6'0,3[-1]12'0,4[-1]6'0,5[-1]6'0,6[1]5'0;0MOVES"
-    state_str2= "STATE6c78da94-1d8a-45bf-aa3b-3dce9a275ce1IS2;11CELLS:0[0]2'8,1[0]2'8,2[0]1'4,3[1]6'0,4[-1]6'0,5[1]4'0,6[1]2'4,7[-1]6'0,8[1]1'0,9[1]2'8,10[1]2'8;2MOVES:0>7[0]@4349032374'4,8<7[1]@4349032375'10"
+    state_str2= "STATE6c78da94-1d8a-45bf-aa3b-3dce9a275ce1IS2;11CELLS:0[0]2'8,1[0]2'8,2[0]1'4,3[-1]6'0,4[-1]6'0,5[-1]4'0,6[-1]6'4,7[-1]6'0,8[1]1'0,9[1]2'8,10[1]2'8;2MOVES:0>7[0]@4349032374'4,8<7[1]@4349032375'10"
     decrypt_state(Map,state_str2)
     
     uid = "blablacar"
@@ -750,8 +776,9 @@ def main() :
     
     #print(Map.listCellules[10].voisinsNeut)
     #print(dijkstra(Map.listCellules[10],Map.listCellules[5]))
-    print(Map.listCellules[7].voisinsEnem)
-    print(Map.cellFront)
+    #print(Map.listCellules[7].voisinsEnem)
+    #print(Map.cellFront)
+    fillPriorite()
     
     '''for i in range(len(Map.cellAlly)):                                      # On parcourt la liste des cellules alliées
         prodmax = 0
