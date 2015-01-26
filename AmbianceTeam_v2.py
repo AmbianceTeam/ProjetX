@@ -5,7 +5,7 @@ import poooc
 
 
 #####A mettre en commentaire lors des tests sur Cloud9#####
-"""import tkinter 
+import tkinter 
 from interface_graphique import dessiner_terrain
 import threading
 
@@ -40,7 +40,7 @@ class GUIInterface(tkinter.Tk):
 
 
 global newGUIThread; newGUIThread = GUIThread()
-newGUIThread.start()"""
+newGUIThread.start()
 ###########################################################
 
 # Définition de la classe Cellule
@@ -320,7 +320,10 @@ def dijkstra(CellS,CellD): # Algorithme de Dijsktra qui recherche le chemin le p
                 listDist[indiceVoisin][1] = listDist[pivot][1] + ligne(Map,listDist[pivot][0].idcell,listDist[pivot][0].voisinsAlly[j].idcell).dist
                 listPred[indiceVoisin] = pivot
         
-        listAExplorer.remove([pivot,listDist[pivot][0]]) # on enleve le pivot de la listAExplorer
+        if ([pivot,listDist[pivot][0]] in listAExplorer): # pour eviter un bug
+            listAExplorer.remove([pivot,listDist[pivot][0]]) # on enleve le pivot de la listAExplorer
+        else : 
+            return []
         #print('listAExplorer __: ')
         #print(listAExplorer)
         
@@ -351,8 +354,10 @@ def fillRedirection(chemin):                                                    
 def fillPriorite():
     # PREMIERE PASS , Remplissage avec les ratios
     for i in range(len(Map.cellNeut)):
-        
-        Map.cellNeut[i].priorite = [(10*Map.cellNeut[i].prod/Map.cellNeut[i].nboff),0.0] # plus le ratio est grand , mieux c'est
+        if(Map.cellNeut[i].nboff != 0):
+            Map.cellNeut[i].priorite = [((Map.cellNeut[i].prod)/Map.cellNeut[i].nboff),0.0] # plus le ratio est grand , mieux c'est
+        else:
+            Map.cellNeut[i].priorite = [((Map.cellNeut[i].prod)/1),0.0]
         #print('{} / {} = {}'.format(Map.cellNeut[i].prod,Map.cellNeut[i].nboff,Map.cellNeut[i].priorite[0]))
         #print(Map.cellNeut[i].priorite)
 
@@ -361,13 +366,13 @@ def fillPriorite():
     # DEUXIEME PASS ,  Remplissage avec la contribution des cellules neutres voisines
     
     for j in range(len(Map.cellNeut)):
-        contri = 0 
+        contri = 1
         for k in range(len(Map.cellNeut[j].voisinsNeut)):
             contri = contri + (Map.cellNeut[j].voisinsNeut[k].priorite[0]+ (1000/ligne(Map,Map.cellNeut[j].idcell,Map.cellNeut[j].voisinsNeut[k].idcell).dist))
             #print('contri {}'.format(contri))
             #print('k : '+str(Map.cellNeut[j].voisinsNeut[k].priorite[0]))
 
-        Map.cellNeut[j].priorite[1] = Map.cellNeut[j].priorite[0]*contri
+        Map.cellNeut[j].priorite[1] = Map.cellNeut[j].priorite[0]+(contri/10)
         #print('ID : {} Pri : {} * {} = {}'.format(Map.cellNeut[j].idcell,Map.cellNeut[j].priorite[0],contri,Map.cellNeut[j].priorite[1]))
         
 
@@ -530,8 +535,8 @@ def play_pooo():
     ####### IA ########*
     while True :
         #####A mettre en commentaire lors des tests sur Cloud9#####
-        """
-        dessiner_terrain(newGUIThread.window.canvas,Map)"""
+        
+        dessiner_terrain(newGUIThread.window.canvas,Map)
         ###########################################################
         state = poooc.state_on_update()
         decrypt_state(Map,state)
@@ -557,7 +562,7 @@ def play_pooo():
             
             
             
-            if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres
+            if Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres Map.cellAlly[i].voisinsEnem == [] and 
                 
                 
                 # Initialisation des variables cible et bestRatio, bestRatio correspondant à la cellule que l'on juge la plus intéressante ((nb unités nécessaire + dist)/prod), plus ce ratio est petit, mieux c'est 
@@ -609,7 +614,7 @@ def play_pooo():
                     
                     # Si le nombre d'unités alliés est supérieure au nombre d'unités restants sur la cellule cible
                     
-                    if (nbRest+2) < Map.cellAlly[i].nboff:                     
+                    if (nbRest) < Map.cellAlly[i].nboff:                     
                         mv = setmove(userid,100,Map.cellAlly[i],cible)          # On envoie nos unités sur la cellule, pour la conquérir
                         poooc.order(mv)
                         
