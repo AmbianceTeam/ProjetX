@@ -2,6 +2,7 @@
 from tkinter import *
 
 def dessiner_terrain(c,Graphe):                                                 # c est un objet de type Canvas
+    c.delete("all")
     listCellules = Graphe.listCellules
     listLignes = Graphe.listLignes
     listInfoTerrain = Graphe.listInfoTerrain
@@ -33,6 +34,7 @@ def dessiner_terrain(c,Graphe):                                                 
         c.create_circle(listCellules[i].x*scaleX+offsetX, listCellules[i].y*scaleY+offsetY, (listCellules[i].radius)/4, fill=listCouleurs[listCellules[i].couleur], outline="#FCFCFC", width=2)
         c.create_text(listCellules[i].x*scaleX+offsetX,listCellules[i].y*scaleY+offsetY,text=str(listCellules[i].nboff),fill="white",anchor="s")
         c.create_text(listCellules[i].x*scaleX+offsetX,listCellules[i].y*scaleY+offsetY,text="I"*listCellules[i].prod,fill="white",anchor="n")
+        c.create_text(listCellules[i].x*scaleX+offsetX,listCellules[i].y*scaleY+offsetY,text=str(round(listCellules[i].priorite[1]*100)/100),fill="black",anchor="e")
 
     
         
