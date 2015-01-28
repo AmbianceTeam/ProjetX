@@ -625,7 +625,7 @@ def play_pooo():
                     poooc.order(mv)
                 
                 elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
-                    mv = setmove(userid,(1/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
+                    mv = setmove(userid,(2/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
                     poooc.order(mv)
                     
                     
@@ -656,7 +656,7 @@ def play_pooo():
                     poooc.order(mv)
                 
                 elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
-                    mv = setmove(userid,(1/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
+                    mv = setmove(userid,(2/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
                     poooc.order(mv)
                     
                     
@@ -752,7 +752,7 @@ def play_pooo():
                     poooc.order(mv)
                     
                 elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
-                    mv = setmove(userid,(1/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
+                    mv = setmove(userid,(2/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
                     poooc.order(mv)
         
         
