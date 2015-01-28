@@ -5,7 +5,7 @@ import poooc
 
 
 #####A mettre en commentaire lors des tests sur Cloud9#####
-import tkinter 
+"""import tkinter 
 from interface_graphique import dessiner_terrain
 import threading
 
@@ -40,7 +40,7 @@ class GUIInterface(tkinter.Tk):
 
 
 global newGUIThread; newGUIThread = GUIThread()
-newGUIThread.start()
+newGUIThread.start()"""
 ###########################################################
 
 # Définition de la classe Cellule
@@ -535,8 +535,8 @@ def play_pooo():
     ####### IA ########*
     while True :
         #####A mettre en commentaire lors des tests sur Cloud9#####
-        
-        dessiner_terrain(newGUIThread.window.canvas,Map)
+        """
+        dessiner_terrain(newGUIThread.window.canvas,Map)"""
         ###########################################################
         state = poooc.state_on_update()
         decrypt_state(Map,state)
@@ -562,7 +562,7 @@ def play_pooo():
             
             
             
-            if Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres Map.cellAlly[i].voisinsEnem == [] and 
+            if Map.cellAlly[i].voisinsEnem == [] and Map.cellAlly[i].voisinsNeut != []  :       #S'il n'y a pas d'ennemis autour de la cellule et qu'il y a des voisins neutres  
                 
                 
                 # Initialisation des variables cible et bestRatio, bestRatio correspondant à la cellule que l'on juge la plus intéressante ((nb unités nécessaire + dist)/prod), plus ce ratio est petit, mieux c'est 
@@ -623,6 +623,10 @@ def play_pooo():
                 elif (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff:       #Sinon, si il n'y a pas d'ennemis à proximité, on part la conquérir si on a assez d'unités
                     mv = setmove(userid,100,Map.cellAlly[i],cible)            
                     poooc.order(mv)
+                
+                elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                    mv = setmove(userid,(1/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
+                    poooc.order(mv)
                     
                     
                     
@@ -649,6 +653,10 @@ def play_pooo():
                 
                 if (cible.nboff + cible.nbdef) < Map.cellAlly[i].nboff and cible.voisinsEnem == [] :
                     mv = setmove(userid,100,Map.cellAlly[i],cible)            
+                    poooc.order(mv)
+                
+                elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                    mv = setmove(userid,(1/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
                     poooc.order(mv)
                     
                     
@@ -742,11 +750,15 @@ def play_pooo():
                     logging.info('condition____________________ ennemi 2')
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
+                    
+                elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                    mv = setmove(userid,(1/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
+                    poooc.order(mv)
         
         
         ##### REDIRECTION DES UNITES #####        
         for l in range(len(Map.listCellules)):                                  # Redirection des unités                                                            
-            if(Map.listCellules[l].redirection != 0 and Map.listCellules[l].nboff >= 2):
+            if(Map.listCellules[l].redirection != 0 and Map.listCellules[l].nboff >= 1):
                 logging.info('redirection____________________ vers ID {}'.format(Map.listCellules[l].redirection.idcell))
                 poooc.order(setmove(userid,100,Map.listCellules[l],Map.listCellules[l].redirection))
         
@@ -767,7 +779,7 @@ def setmove(userid,pourcent,Cellfrom,Cellto):
     return res
 
 
-def main() : 
+def main() :
     
     init_string = "INIT6c78da94-1d8a-45bf-aa3b-3dce9a275ce1TO2[1];2;11CELLS:0(0,0)'100'20'8'I,1(2500,2500)'100'20'8'I,2(5000,2500)'100'20'8'I,3(7500,2500)'100'20'8'I,4(2500,5000)'100'20'8'I,5(5000,5000)'300'40'8'III,6(7500,5000)'100'20'8'I,7(2500,7500)'100'20'8'I,8(5000,7500)'100'20'8'I,9(7500,7500)'100'20'8'I,10(10000,10000)'100'20'8'I;18LINES:0@5390OF2,0@7705OF7,0@7705OF3,0@3335OF1,0@5390OF4,1@3135OF5,2@2100OF5,3@3135OF5,3@7705OF10,4@2100OF5,5@3135OF7,5@2100OF8,5@3135OF9,5@2100OF6,6@5390OF10,7@7705OF10,8@5390OF10,9@3335OF10"
     init_pooo(init_string) # Instanciation de la Map (objet Graphe)
