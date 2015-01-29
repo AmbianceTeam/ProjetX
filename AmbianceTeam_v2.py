@@ -372,7 +372,7 @@ def fillPriorite():
             #print('contri {}'.format(contri))
             #print('k : '+str(Map.cellNeut[j].voisinsNeut[k].priorite[0]))
 
-        Map.cellNeut[j].priorite[1] = Map.cellNeut[j].priorite[0]+(contri/10)
+        Map.cellNeut[j].priorite[1] = Map.cellNeut[j].priorite[0]+(contri/5)
         #print('ID : {} Pri : {} * {} = {}'.format(Map.cellNeut[j].idcell,Map.cellNeut[j].priorite[0],contri,Map.cellNeut[j].priorite[1]))
         
 
@@ -539,6 +539,10 @@ def play_pooo():
         dessiner_terrain(newGUIThread.window.canvas,Map)
         ###########################################################
         state = poooc.state_on_update()
+        logging.info('-------------{}--------------------------------------------'.format(state[0:7]))
+        if(state[0:8] == "GAMEOVER"): #détection de la fin de la partie
+            logging.info('-------------FIN DE LA PATIE-------------------')
+            break
         decrypt_state(Map,state)
         
         if(Map.cellFront != lastcellFront):                                     # Réinitialisation des redirections de toutes les cellules
@@ -624,7 +628,8 @@ def play_pooo():
                     mv = setmove(userid,100,Map.cellAlly[i],cible)            
                     poooc.order(mv)
                 
-                elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                if (Map.cellAlly[i].nboff == Map.cellAlly[i].offsize):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                    logging.info('##############DEBORDEMENT UNITES   SECTION 1 #################')
                     mv = setmove(userid,(2/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
                     poooc.order(mv)
                     
@@ -655,7 +660,8 @@ def play_pooo():
                     mv = setmove(userid,100,Map.cellAlly[i],cible)            
                     poooc.order(mv)
                 
-                elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                if (Map.cellAlly[i].nboff == Map.cellAlly[i].offsize):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                    logging.info('##############DEBORDEMENT UNITES   SECTION 1-2 #################')
                     mv = setmove(userid,(2/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
                     poooc.order(mv)
                     
@@ -751,14 +757,15 @@ def play_pooo():
                     mv = setmove(userid,100,Map.cellAlly[i],cible)
                     poooc.order(mv)
                     
-                elif (Map.cellAlly[i].nboff == (Map.cellAlly[i].prod+1)*10):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                if (Map.cellAlly[i].nboff == Map.cellAlly[i].offsize):    #sinon, si la cellule est pleine, on envoie les unités en trop
+                    logging.info('##############DEBORDEMENT UNITES   SECTION 3 #################')
                     mv = setmove(userid,(2/Map.cellAlly[i].nboff),Map.cellAlly[i],cible)            
                     poooc.order(mv)
         
         
         ##### REDIRECTION DES UNITES #####        
         for l in range(len(Map.listCellules)):                                  # Redirection des unités                                                            
-            if(Map.listCellules[l].redirection != 0 and Map.listCellules[l].nboff >= 1):
+            if(Map.listCellules[l].redirection != 0 and Map.listCellules[l].nboff >= 2):
                 logging.info('redirection____________________ vers ID {}'.format(Map.listCellules[l].redirection.idcell))
                 poooc.order(setmove(userid,100,Map.listCellules[l],Map.listCellules[l].redirection))
         
